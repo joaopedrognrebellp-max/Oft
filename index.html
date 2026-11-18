@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oftalmo Update</title>
+<meta name="theme-color" content="#1f2328">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Oftalmo Update">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --char:#1f2328; --char2:#2b3036; --gold:#c9a227; --gold2:#e6c45a;
+  --bg:#f4f2ee; --card:#ffffff; --ink:#1d1f22; --muted:#626a73; --line:#e3dfd6;
+  --yel:#ffe14d; --yel2:#fff3a6; --yelb:#d9b400;
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#15171a; --card:#1e2125; --ink:#eceae5; --muted:#a3aab3; --line:#30343a; }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"IBM Plex Sans","DejaVu Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+
+/* Header */
+header{background:var(--char);color:#fff;padding:18px 18px 14px;border-bottom:3px solid var(--gold)}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;max-width:980px;margin:0 auto}
+.brand h1{font-family:"IBM Plex Serif",Georgia,serif;font-size:22px;margin:0;letter-spacing:.2px}
+.brand h1 span{color:var(--gold2)}
+.edition{font-size:12px;color:#c8ccd1;margin-left:auto}
+.subtitle{max-width:980px;margin:4px auto 0;font-size:13px;color:#aeb4bb}
+
+/* Tabs */
+nav{position:sticky;top:0;z-index:20;background:var(--char2);border-bottom:1px solid #000}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 12px;max-width:980px;margin:0 auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid #444a52;background:transparent;color:#d9dde2;border-radius:999px;padding:6px 13px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.tab .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.tab[aria-selected="true"]{background:#fff;color:var(--char);border-color:#fff;font-weight:600}
+
+main{max-width:980px;margin:0 auto;padding:18px 14px 60px}
+.area-head{display:flex;align-items:center;gap:10px;margin:6px 0 18px}
+.area-head h2{font-family:"IBM Plex Serif",Georgia,serif;font-size:24px;margin:0}
+.area-head .bar{width:6px;height:30px;border-radius:3px}
+.area-head p{margin:2px 0 0;color:var(--muted);font-size:13px}
+
+/* Weekly yellow box — elevated */
+.weekly{position:relative;background:linear-gradient(160deg,var(--yel2),var(--yel));color:#2a2400;border:2px solid var(--yelb);border-radius:18px;padding:22px 20px 18px;margin:8px 0 28px;box-shadow:0 14px 28px -10px rgba(140,110,0,.55),0 3px 0 var(--yelb);transform:translateY(-6px)}
+.weekly .flag{position:absolute;top:-13px;left:16px;background:var(--char);color:var(--yel);font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:2px solid var(--yelb)}
+.weekly h3{font-family:"IBM Plex Serif",Georgia,serif;font-size:20px;line-height:1.25;margin:4px 0 6px}
+.weekly .date{display:inline-block;font-size:16px;font-weight:700;background:var(--char);color:var(--yel);padding:4px 11px;border-radius:8px;margin:6px 0 4px}
+.weekly p{margin:8px 0}
+.weekly ul{margin:6px 0 8px;padding-left:20px}
+.weekly .pearl{background:rgba(255,255,255,.55);border-left:4px solid var(--char);border-radius:8px;padding:9px 12px;margin-top:10px;font-size:14px}
+.weekly .src a{color:#3d3300}
+
+/* Sections */
+.section{margin:26px 0 10px}
+.section h4{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.section h4::after{content:"";flex:1;height:1px;background:var(--line)}
+.grid{display:grid;gap:12px}
+@media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+
+.card{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--ac,#888);border-radius:var(--radius);padding:13px 14px 12px}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:5px}
+.card .d{font-size:12px;color:var(--muted);font-weight:500;margin-right:2px}
+.chip{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:#eceae4;color:#3c4148;white-space:nowrap}
+@media (prefers-color-scheme: dark){.chip{background:#2c3036;color:#d0d4d9}}
+.chip.fda{background:#e3ecfb;color:#1f4d9a}
+.chip.br{background:#dff3e4;color:#1c6b33}
+.chip.f3{background:#f6e6fb;color:#6d2a86}
+.chip.dev{background:#fdeedd;color:#8a4a0b}
+.chip.drop{background:#dcf1ee;color:#11695f}
+.chip.area{background:transparent;border:1px solid currentColor}
+.card h5{font-size:15.5px;margin:0 0 4px;line-height:1.3}
+.card p{margin:0;font-size:14px;color:var(--ink)}
+.card .pearl{margin-top:8px;font-size:13px;background:#faf6e8;border-left:3px solid var(--gold);padding:6px 9px;border-radius:6px;color:#4a3f17}
+@media (prefers-color-scheme: dark){.card .pearl{background:#2a2619;color:#e9dcae}}
+.card .src{margin-top:8px;font-size:12px;color:var(--muted)}
+.card .src a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+
+/* Radar table */
+.radar{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.radar .row{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:10px 14px;border-top:1px solid var(--line);font-size:14px}
+.radar .row:first-child{border-top:0}
+.radar .when{font-weight:700;color:var(--gold);font-size:13px}
+.radar .what b{font-weight:600}
+.radar .what span{display:block;color:var(--muted);font-size:12.5px}
+
+/* Toolbar */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 6px}
+.search{flex:1 1 220px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 12px;font:inherit;font-size:14px}
+.fbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 11px;font:inherit;font-size:12.5px;cursor:pointer}
+.fbtn.on{background:var(--char);color:#fff;border-color:var(--char)}
+.empty{color:var(--muted);font-size:14px;padding:12px 2px}
+
+.top3{display:grid;gap:10px;margin-top:10px}
+.top3 .t{display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,.55);border-radius:10px;padding:9px 11px;cursor:pointer;border:0;text-align:left;font:inherit;color:inherit;width:100%}
+.top3 .n{font-family:"IBM Plex Serif",Georgia,serif;font-weight:700;font-size:20px;line-height:1;color:var(--char);min-width:18px}
+.top3 .t b{display:block}
+.top3 .t small{opacity:.8}
+
+.card{cursor:pointer;transition:transform .12s ease, box-shadow .12s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 18px -10px rgba(0,0,0,.35)}
+.card .more{display:flex;justify-content:space-between;margin-top:9px;padding-top:8px;border-top:1px dashed var(--line);font-size:12.5px;font-weight:600;color:var(--ac)}
+.sheet-bg{position:fixed;inset:0;background:rgba(15,17,20,.55);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.sheet-bg.open{display:flex}
+.sheet{background:var(--card);color:var(--ink);width:100%;max-width:720px;max-height:88vh;overflow:auto;border-radius:20px 20px 0 0;border-top:6px solid var(--ac,#888);padding:10px 18px 28px;animation:up .2s ease}
+@media(min-width:760px){.sheet-bg{align-items:center}.sheet{border-radius:18px;border-top-width:6px}}
+@keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+.sheet .grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:4px auto 10px}
+.sheet .top{display:flex;gap:10px;align-items:flex-start}
+.sheet h3{font-family:"IBM Plex Serif",Georgia,serif;font-size:20px;line-height:1.25;margin:4px 0 8px;flex:1}
+.sheet .x{border:0;background:var(--bg);color:var(--ink);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;flex:0 0 auto}
+.sheet .lead{font-size:14.5px;color:var(--muted);margin:0 0 6px}
+.blk{margin-top:14px}
+.blk h6{margin:0 0 5px;font-size:11.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--ac)}
+.blk p{margin:0;font-size:14.5px}
+.blk ul{margin:0;padding-left:0;list-style:none}
+.blk li{position:relative;padding:7px 10px 7px 30px;margin-bottom:6px;background:var(--bg);border-radius:9px;font-size:14.5px}
+.blk li::before{content:"";position:absolute;left:11px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--ac)}
+.sheet .pearl{margin-top:14px;font-size:14px;background:#faf6e8;border-left:4px solid var(--gold);padding:9px 11px;border-radius:8px;color:#4a3f17}
+@media (prefers-color-scheme: dark){.sheet .pearl{background:#2a2619;color:#e9dcae}}
+.sheet .src{margin-top:14px;font-size:13px;color:var(--muted)}
+.sheet .src a{color:var(--muted)}
+.chead{display:flex;gap:12px;align-items:flex-start}
+.cright{flex:1;min-width:0}
+.dbig{flex:0 0 auto;width:62px;text-align:center;border-radius:11px;background:var(--ac);color:#fff;padding:6px 4px 7px;line-height:1}
+.dbig b{display:block;font-family:"IBM Plex Serif",Georgia,serif;font-size:28px;font-weight:700}
+.dbig span{display:block;font-size:11px;font-weight:600;letter-spacing:.6px;margin-top:4px;opacity:.95}
+.dbig.partial b{font-size:19px;padding-top:4px}
+.dbig.partial span{font-size:9.5px;letter-spacing:.2px}
+.sdate{display:inline-block;font-size:17px;font-weight:700;color:#fff;background:var(--ac);padding:5px 12px;border-radius:9px;margin:2px 0 10px}
+.card .detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease}
+.card .detail-in{overflow:hidden}
+.card.open .detail{grid-template-rows:1fr}
+.card.open{grid-column:1/-1;box-shadow:0 14px 30px -14px rgba(0,0,0,.35);transform:none}
+.card .arr{transition:transform .25s ease;display:inline-block}
+.card.open .arr{transform:rotate(180deg)}
+.dtitle{margin-top:14px;padding-top:12px;border-top:2px solid var(--ac);font-family:"IBM Plex Serif",Georgia,serif;font-weight:700;font-size:17px}
+.entenda{margin-top:10px;background:color-mix(in srgb, var(--ac) 9%, var(--card));border-radius:10px;padding:10px 12px}
+.entenda h6,.card .blk h6{margin:0 0 5px;font-size:11.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--ac)}
+.entenda p{margin:0;font-size:14.5px;line-height:1.6}
+.card .blk{margin-top:12px}
+.card .blk p{font-size:14.5px;line-height:1.55}
+.card .blk ul{margin:0;padding:0;list-style:none}
+.card .blk li{position:relative;padding:7px 10px 7px 28px;margin-bottom:6px;background:var(--bg);border-radius:9px;font-size:14.5px}
+.card .blk li::before{content:"";position:absolute;left:11px;top:14px;width:7px;height:7px;border-radius:50%;background:var(--ac)}
+.card .detail .src{margin-top:12px}
+footer{max-width:980px;margin:0 auto;padding:10px 16px 40px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
+
+/* ===== Ao vivo + avisos ===== */
+.tab .new{display:inline-block;min-width:18px;height:18px;line-height:18px;padding:0 5px;margin-left:6px;border-radius:999px;background:var(--yel);color:#2a2400;font-size:11px;font-weight:700;text-align:center}
+.pushbox{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:var(--radius);padding:14px 15px;margin:4px 0 22px}
+.pushbox h3{margin:0 0 4px;font-size:15px;display:flex;align-items:center;gap:8px}
+.pushbox p{margin:4px 0 10px;color:var(--muted);font-size:13.5px}
+.pushbox .st{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:#eceae4;color:#3c4148}
+.pushbox .st.ok{background:#d8f2df;color:#17602b}
+.pushbox .st.warn{background:#fff0c2;color:#7a5a00}
+@media (prefers-color-scheme: dark){.pushbox .st{background:#2c3036;color:#d0d4d9}.pushbox .st.ok{background:#173d22;color:#9fe0b0}.pushbox .st.warn{background:#3d3210;color:#f1d27a}}
+.pbtn{font:inherit;font-size:14px;font-weight:600;border:0;border-radius:10px;padding:10px 16px;cursor:pointer;background:var(--char);color:#fff;margin:2px 8px 2px 0}
+.pbtn.gold{background:var(--gold);color:#1f2328}
+.pbtn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.subcode{width:100%;min-height:96px;font:12px/1.4 ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg);color:var(--ink);margin-top:8px}
+.steps{margin:8px 0 0;padding-left:20px;font-size:13.5px;color:var(--ink)}
+.steps li{margin:3px 0}
+.livemeta{font-size:12.5px;color:var(--muted);margin:-6px 0 14px}
+.lcard{cursor:default}
+.lcard .lk{display:inline-block;margin-top:8px;font-size:13px;font-weight:600;color:var(--ac,#555);text-decoration:none}
+.lcard .lk:hover{text-decoration:underline}
+.lcard.isnew{box-shadow:0 0 0 2px var(--yel)}
+.chip.src{background:transparent;border:1px solid var(--line)}
+.chip.nv{background:var(--yel);color:#2a2400}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>Oftalmo <span>Update</span></h1>
+    <div class="edition" id="edition"></div>
+  </div>
+  <div class="subtitle">Notícias, artigos e mercado por subespecialidade — curadoria semanal</div>
+</header>
+<nav><div class="tabs" id="tabs" role="tablist"></div></nav>
+<main id="main"></main>
+<footer id="foot"></footer>
+
+<script>
+/* =========================================================
+   DADOS DA EDIÇÃO — atualize aqui a cada semana
+   Item: {t: título, d: 'AAAA-MM-DD', tags: [...], s: resumo, p: pérola (opcional), src: [[rótulo, url]]}
+   Tags com cor: FDA, Brasil, Fase 3, Aparelho
+   ========================================================= */
+const EDITION = { date: "2026-11-13", label: "Edição de 13 nov 2026", period: "Semana de 9 a 13 de novembro" };
+
+const AREAS = [
+{ id:"noticias", name:"Notícias", color:"#1f2328", desc:"Panorama geral, Brasil e calendário regulatório",
+  weekly:{ kind:"top3", title:"As 3 notícias da semana", date:"9–13 nov 2026",
+    items:[
+      {go:"neuro", t:"FDA manda incluir alerta de NAION em todos os agonistas de GLP-1", s:"Semaglutida, tirzepatida e afins — sociedades pedem calma: risco raro e causalidade não provada."},
+      {go:"retina", t:"Stargardt ganha tração: VG801 rumo à fase 3 e 1º paciente com RNAi anti-RBP4", s:"E tinlarebant oral com decisão do FDA marcada para fevereiro de 2027."},
+      {go:"mercado", t:"Anti-VEGF em movimento: biossimilar Lucamzi aprovado e Beovu muda de dono nos EUA", s:"Xbrane lança em 2027; Imvionix assume Beovu nos EUA e Canadá."}
+    ]},
+  articles:[
+    {t:"Nobel de Medicina 2026 premia a optogenética", d:"2026-10-05", tags:["Pesquisa"], s:"Deisseroth, Hegemann e Nagel foram premiados pela descoberta dos canais iônicos ativados por luz (canalrodopsina). Na oftalmologia, o conceito já está em ensaio clínico para restaurar visão em retinose pigmentar.", p:"Optogenética ≠ terapia gênica de reposição: ela dá fotossensibilidade a células que sobrevivem (bipolares/ganglionares), por isso é independente da mutação.", src:[["AJMC","https://www.ajmc.com/view/3-scientists-share-nobel-prize-in-physiology-or-medicine-for-optogenetics"],["Healio","https://www.healio.com/news/neurology/20261008/nobel-prize-awarded-to-three-pioneering-researchers-in-optogenetics"]]},
+    {t:"AAO 2026 (Nova Orleans): os grandes temas", d:"2026-10-12", tags:["Congresso"], s:"Retina com foco em durabilidade e terapias gênicas, IA saindo da discussão de acurácia para integração no fluxo do consultório, e expansão do glaucoma intervencionista. Dados relevantes em TED e uveíte.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]},
+    {t:"70º Congresso Brasileiro de Oftalmologia (Salvador)", d:"2026-09-12", tags:["Brasil","Congresso"], s:"O CBO lançou recomendações de rotina de consultas por faixa etária e, com a SBOP, a cartilha «Mais Tempo ao Ar Livre» sobre telas e miopia infantil.", src:[["Agência Brasil","https://agenciabrasil.ebc.com.br/saude/noticia/2026-09/saiba-qual-e-rotina-ideal-de-consultas-para-cuidar-da-visao"],["Correio da Manhã","https://www.correiodamanha.com.br/especiais/2026/10/324945-oftalmologistas-alertam-para-utilizacao-excessiva-de-telas-e-miopia-em-criancas.html"]]},
+    {t:"Fila de transplante de córnea no Brasil cresce 24% em seis meses", d:"2026-09", tags:["Brasil"], s:"Segundo o CBO, 37.719 pessoas aguardavam córnea, contra 32.639 em dezembro de 2025.", src:[["Acessa","https://www.acessa.com/noticias/2026/09/amp/339124-brasil-tem-quase-38-mil-pessoas-a-espera-de-transplante-de-cornea.html"]]},
+    {t:"CFM reforça refração e diagnóstico de miopia como ato médico", d:"2026-10-05", tags:["Brasil"], s:"O III Fórum da Câmara Técnica de Oftalmologia do CFM discutiu a ADPF 131 e o combate ao exercício ilegal da medicina na especialidade.", src:[["Portal CFM","https://portal.cfm.org.br/noticias/tem-inicio-a-programacao-cientifica-do-iii-forum-da-camara-tecnica-de-oftalmologia-do-cfm/"]]},
+    {t:"Morre Kevin Waltz, pioneiro da cirurgia refrativa", d:"2026-11-12", tags:["Comunidade"], s:"Oftalmologista e optometrista norte-americano, inovador e educador em refrativa, faleceu em 9 de novembro.", src:[["Eyewire+","https://eyewire.news/rss"]]}
+  ],
+  market:[],
+  radar:[
+    ["dez 2026","KSI-101 (Kodiak)","Edema macular uveítico — 1º resultado de fase 3"],
+    ["4º tri 2026","Zenkuda / tarcocimab (Kodiak)","Submissão de BLA multi-indicação (DMRI, RD, OVR)"],
+    ["12 fev 2027","Tinlarebant (Belite Bio)","Stargardt tipo 1 — PDUFA com revisão prioritária"],
+    ["1º tri 2027","Elegrobart (Viridian)","TED — submissão de BLA (autoinjetor SC)"],
+    ["1º tri 2027","Axpaxli SOL-R","DMRI neovascular — resultado do 2º estudo de fase 3"],
+    ["30 abr 2027","K-911 / bimatoprosta grenod (Kowa/Nicox)","Glaucoma/HO — PDUFA"],
+    ["1º sem 2027","MOGENRY (Nanoscope)","Retinose pigmentar — PDUFA da 1ª optogenética"],
+    ["Pendente","SYD-101 atropina 0,01% (Sydnexis)","Miopia infantil — decisão do FDA após comitê de 30/10"]
+  ]
+},
+
+{ id:"retina", name:"Retina", color:"#c0392b", desc:"Retina clínica, cirúrgica e distrofias hereditárias",
+  weekly:{ title:"Stargardt: semana de avanços no pipeline", date:"6–10 nov 2026",
+    body:"<ul><li><b>VG801 (VeonGen)</b> — terapia gênica dual-AAV para ABCA4: FDA concordou com o desenho da fase 3. Na fase 1/2 (sem controle), 11 de 13 pacientes avaliáveis ganharam ≥5 letras.</li><li><b>CITY-RBP4 (City Therapeutics)</b> — RNAi conjugado a GalNAc que reduz a RBP4 hepática: 1º participante dosado na fase 1; dados em meados de 2027.</li><li><b>Tinlarebant (Belite Bio)</b> — antagonista oral de RBP4: NDA em revisão prioritária, PDUFA 12/02/2027, após 24 meses do DRAGON apresentados na AAO.</li></ul>",
+    pearl:"<b>Pérola:</b> Stargardt = ABCA4, autossômica recessiva. Acúmulo de bisretinoides (A2E) no EPR → flecks e «silêncio coroidal» na angiografia. Reduzir RBP4 diminui a entrega de retinol ao olho e, com isso, a formação de A2E — é o racional de tinlarebant e CITY-RBP4.",
+    src:[["Eyewire+ (VG801)","https://eyewire.news/rss"],["Ophthalmology Times","https://www.ophthalmologytimes.com/view/eyes-on-october-2026-aao-and-euretina-highlights-a-trio-of-fda-approvals-and-optogenetics-takes-the-spotlight"],["Healio (pipeline)","https://www.healio.com/news/ophthalmology/20261022/ophthalmology-industry-pipeline"]] },
+  articles:[
+    {lab:true, t:"DAYBREAK: tarcocimab não inferior ao aflibercepte, com metade dos pacientes em 6/6 meses", d:"2026-10-09", tags:["Fase 3"], s:"667 olhos virgens de tratamento. Tarcocimab 5 mg (anti-VEGF conjugado a biopolímero) ganhou 7,2 vs 7,6 letras do aflibercepte; 54% chegaram a intervalo de 24 semanas e a mediana pós-carga foi 1 injeção vs 5. Tabirafusp (bispecífico VEGF/IL-6) ganhou 6,3 letras. Sem inflamação intraocular com tarcocimab.", src:[["Retinal Physician","https://retinalphysician.com/issues/2026/aao-retina-subspecialty-day/tarcocimab-and-tabirafusp/"],["BioPharma Dive","https://www.biopharmadive.com/news/kodiak-tabirafusp-wet-amd-daybreak-study-results/831467/"]]},
+    {lab:true, t:"SOL-1: implante de axitinibe supera aflibercepte em dose única", d:"2026-10-11", tags:["Fase 3"], s:"Axpaxli (hidrogel bioabsorvível com axitinibe, liberação de 9–12 meses): 74,1% vs 55,8% mantiveram visão (perda <15 letras) na semana 36 e 65,9% vs 44,2% na semana 52. Pré-NDA positivo; submissão prevista para o 4º trimestre de 2026.", p:"Primeiro desenho de superioridade bem-sucedido contra anti-VEGF aprovado em DMRI neovascular — e mecanismo diferente (inibidor de tirosina-quinase pan-VEGFR).", src:[["Eyewire+","https://eyewire.news/news/ocular-therapeutix-announces-positive-phase-3-sol-1-results-demonstrating-superiority-of-axpaxli-in-wet-amd"],["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]},
+    {lab:true, t:"Duravyu (vorolanibe) falha desfecho primário no LUGANO", d:"2026-10-22", tags:["Fase 3"], s:"O inserto intravítreo de vorolanibe da EyePoint não atingiu o desfecho primário no conjunto total em DMRI, embora tenha mostrado sinais favoráveis em carga de tratamento e controle anatômico. Em paralelo, o fase 2 VERONA avalia o produto em EMD previamente tratado.", src:[["Healio","https://www.healio.com/news/ophthalmology/20261022/ophthalmology-industry-pipeline"]]},
+    {lab:true, t:"Remigromig (Merck) não inferior ao ranibizumabe no EMD", d:"2026-10-22", tags:["Fase 3"], s:"O estudo fase 2b/3 BRUNELLO mostrou não inferioridade em 52 semanas no edema macular diabético.", src:[["Healio","https://www.healio.com/news/ophthalmology/20261022/ophthalmology-industry-pipeline"]]},
+    {lab:true, t:"MOGENRY: 4 anos de durabilidade e PDUFA no 1º semestre de 2027", d:"2026-10-11", tags:["FDA"], s:"Terapia optogenética intravítrea, aplicada em consultório e independente da mutação, para retinose pigmentar com perda visual grave. O RESTORE (fase 2b/3, controlado com sham) atingiu os desfechos primário e secundários.", src:[["Optometry Times","https://www.optometrytimes.com/view/fda-accepts-nanoscope-s-bla-mco-010-retinitis-pigmentosa"],["Glance","https://glance.eyesoneyecare.com/stories/2026-09-10/fda-accepts-nanoscope-s-optogenetic-gene-therapy-bla-for-rp/"]]},
+    {lab:true, t:"Atrofia geográfica: novas métricas e o inibidor de inflamassoma K8", d:"2026-11-06", tags:["Fase 2"], s:"Na AAO, Sadda propôs medir o ritmo de avanço da borda e um escore de gravidade ponderado pela localização. No Empire Forum, Ambati apresentou resultados de fase 2 do K8, que mira o inflamassoma com posologia mais espaçada.", src:[["Ophthalmology Times","https://www.ophthalmologytimes.com/articles?page=2"]]},
+    {t:"Reprogramar Müller em fotorreceptor: dados pré-clínicos", d:"2026-11-11", tags:["Pesquisa"], s:"A Mogrify apresentará em 3/12 dados em roedores de um fator de transcrição entregue por AAV que converte glia de Müller em fotorreceptores.", src:[["Eyewire+","https://eyewire.news/rss"]]}
+  ],
+  market:[
+    {lab:true, t:"FDA aprova Lucamzi, biossimilar de ranibizumabe", d:"2026-11-02", tags:["FDA"], s:"Lucamzi (ranibizumabe-blrz), da Xbrane, foi aprovado como biossimilar do Lucentis; lançamento nos EUA previsto para 2027.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {lab:true, t:"Imvionix compra direitos do Beovu nos EUA e Canadá", d:"2026-11-10", tags:["Negócios"], s:"A Imvionix passa a ser detentora do registro do brolucizumabe nesses mercados (valores não divulgados).", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {lab:true, t:"Lytenava: primeiro bevacizumabe oftálmico aprovado pelo FDA", d:"2026-07-24", tags:["FDA"], s:"Outlook Therapeutics obteve aprovação do bevacizumabe-vikg para DMRI neovascular, encerrando duas décadas de uso exclusivamente off-label/fracionado nos EUA.", src:[["EyeSmart","https://eyesmart.com.au/newsarticle/7562-us-regulator-approves-first-purpose-built-ophthalmic-bevacizumab-for-wet-amd"]]},
+    {t:"IA autônoma para retinopatia diabética leva o Prix Galien", d:"2026-11-04", tags:["Aparelho"], s:"O AEYE-DS, sistema de triagem autônoma já liberado pelo FDA, venceu na categoria de saúde digital.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {t:"Robô compacto para cirurgia de retina em desenvolvimento", d:"2026-10-30", tags:["Aparelho"], s:"A suíça VisioSurgical, com a Kaleidoscope Innovation, mira precisão melhor que 10 µm.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {t:"Glaukos licencia biológico tri-específico para retina", d:"2026-10", tags:["Negócios"], s:"Acordo com a RevOpsis pelo RO-104 e direitos para até quatro outros biológicos de retina.", src:[["Benzinga","https://www.benzinga.com/node/62253761"]]},
+    {lab:true, t:"Brasil: Anvisa ainda sem medicamento registrado para atrofia geográfica", d:"2026-06-17", tags:["Brasil"], s:"Grupo da FMRP-USP relatou uso off-label de eculizumabe em AG; o pegcetacoplan segue sem registro, com importação excepcional autorizada.", src:[["IntraMed","https://www.intramed.net/content/medicamento-usado-em-doenca-hematologica-mostra-potencial-na-degeneracao-macular-seca"]]}
+  ]
+},
+
+{ id:"glaucoma", name:"Glaucoma", color:"#2e6fd6", desc:"Clínico, MIGS e cirurgia filtrante",
+  weekly:{ title:"Frio e PIO: temperatura ambiente mais baixa associada a pressão mais alta", date:"6 nov 2026",
+    body:"<p>Estudo retrospectivo no <i>British Journal of Ophthalmology</i> encontrou PIO mais elevada em dias mais frios em pacientes com glaucoma primário de ângulo aberto estável. É observacional — associação, não causalidade.</p>",
+    pearl:"<b>Pérola:</b> a PIO oscila no ciclo circadiano (pico noturno/matinal, em decúbito) e também sazonalmente (maior no inverno). Ao comparar medidas para julgar progressão, considere estação e horário — uma «alta» isolada no inverno pode não ser falha terapêutica.",
+    src:[["Eyewire+","https://eyewire.news/rss"]] },
+  articles:[
+    {t:"Facectomia como 1ª cirurgia no ângulo fechado chega a 48,4%", d:"2026-10-11", tags:["Congresso"], s:"Dados do registro IRIS e enquetes da AAO mostram a facectomia inicial em adultos ≥50 anos com glaucoma de ângulo fechado em alta, com mudanças também no uso de trabeculectomia e no manejo do glaucoma juvenil.", p:"EAGLE: extração do cristalino transparente teve melhor custo-efetividade e qualidade de vida que iridotomia a laser em GPAF/FAP com PIO ≥30 mmHg.", src:[["Ophthalmology Times","https://www.ophthalmologytimes.com/conferences/aao?b=ot"]]},
+    {t:"VisiPlate: 2 anos do estudo VITA", d:"2026-10-10", tags:["Aparelho"], s:"Dispositivo de bolha minimamente invasivo com rede de microcanais para reduzir a PIO apresentou dados de 2 anos na AAO (números ainda não divulgados).", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]},
+    {iol:true, t:"LIO com reservatório de bimatoprosta: fase 2 positivo em 12 meses", d:"2026-10-10", tags:["Fase 2"], s:"O sistema BIM-IOL (SpyGlass) combina a lente intraocular com almofadas de liberação de fármaco para GAA e hipertensão ocular.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]},
+    {t:"PRESERFLO: inclusão concluída no pivotal norte-americano", d:"2026", tags:["Aparelho"], s:"Glaukos completou a inclusão do estudo em glaucoma avançado após falha cirúrgica; dados de 12 meses de redução de PIO guiarão a estratégia com o FDA.", src:[["Ophthalmology Times","https://www.ophthalmologytimes.com/clinical/glaucoma?b=ot"]]}
+  ],
+  market:[
+    {lab:true, t:"K-911 (bimatoprosta grenod): PDUFA em 30/04/2027", d:"2026-08-27", tags:["FDA"], s:"Colírio doador de óxido nítrico + bimatoprosta (Kowa/Nicox). Fases 3 Mont Blanc e Denali contra latanoprosta 0,005%. Lançamento nos EUA possível no 2º semestre de 2027.", p:"Mecanismo duplo: NO aumenta o escoamento trabecular (via convencional) e a bimatoprosta, o uveoescleral.", src:[["Optometry Times","https://www.optometrytimes.com/view/fda-accepts-nda-for-bimatoprost-grenod-in-open-angle-glaucoma-and-oht"]]},
+    {t:"FDA libera OMNI Ultra (Sight Sciences)", d:"2026-08-11", tags:["FDA","Aparelho"], s:"Canaloplastia e trabeculotomia em passagem única, sem implante, para glaucoma de ângulo aberto. Lançado no estande da AAO.", src:[["Ophthalmology Times","https://www.ophthalmologytimes.com/clinical/glaucoma?b=ot"]]},
+    {t:"CMS cria pagamento para a bomba FSYX", d:"2026-10-01", tags:["Aparelho"], s:"O dispositivo não invasivo de ajuste de pressão ocular ganhou via de reembolso a partir de 1º de outubro.", src:[["Ophthalmology Times","https://www.ophthalmologytimes.com/clinical/glaucoma?b=ot"]]},
+    {t:"Espaçador uveal Intercil recebe IDE", d:"2026-10-22", tags:["Aparelho"], s:"A Ciliatech poderá iniciar estudo de viabilidade do dispositivo em glaucoma.", src:[["Healio","https://www.healio.com/news/ophthalmology/20261022/ophthalmology-industry-pipeline"]]},
+    {lab:true, t:"iDose TR pode ser reaplicado", d:"2026-01-28", tags:["FDA"], s:"Suplemento de bula aprovado permite reaplicação do implante intracameral de travoprosta com protocolo de retratamento.", src:[["CRSToday","https://crstoday.com/news/fda-approves-repeat-treatment-labeling-for-glaukos-idose-tr-in-glaucoma/2486226/"]]}
+  ]
+},
+
+{ id:"catarata", name:"Catarata & Refrativa", color:"#8e44ad", desc:"LIOs, presbiopia e cirurgia refrativa",
+  weekly:{ title:"Zeiss entra no mercado de LIO fácica: PT Lunana aprovada na China", date:"10 nov 2026",
+    body:"<p>A NMPA chinesa aprovou a primeira lente fácica da Zeiss, com comercialização prevista para 2027 — um novo concorrente num segmento em que a ICL domina, com a China entre os maiores mercados de alta miopia.</p>",
+    pearl:"<b>Pérola:</b> LIO fácica — avalie ACD (geralmente ≥2,8–3,0 mm a partir do endotélio), contagem endotelial adequada à idade, ângulo aberto e refração estável. Complicações-chave: catarata subcapsular anterior (vault baixo), bloqueio pupilar/glaucoma (vault alto) e perda endotelial progressiva.",
+    src:[["Eyewire+","https://eyewire.news/rss"]] },
+  articles:[
+    {iol:true, t:"TECNIS PureSee chega ao mercado americano", d:"2026-06-11", tags:["FDA","Aparelho"], s:"EDOF puramente refrativa da J&J (modelo ZEN00V). Pivotal com 228 pacientes bilaterais; única EDOF nos EUA sem advertência de perda de sensibilidade ao contraste; versão tórica para ≥1,0 D.", src:[["Ophthalmology Times","https://ophthalmologytimes.com/view/tecnis-puresee-iol-launches-in-us-following-fda-approval-for-cataract-surgery"]]},
+    {lab:true, t:"Fentolamina (Ryzumvi) ganha indicação para presbiopia", d:"2026-10-16", tags:["FDA","Colírio"], s:"O FDA aprovou a fentolamina 0,75% sem conservante, em dose única à noite, para presbiopia em adultos (fase 3 VEGA-2 e VEGA-3). Já era aprovada para reverter midríase. Ainda sem aprovação da Anvisa.", p:"Mecanismo: bloqueio α-adrenérgico do dilatador da íris → miose leve e efeito pinhole, sem o espasmo ciliar dos mióticos colinérgicos.", src:[["Healio","https://www.healio.com/news/ophthalmology/20261016/fda-approves-ryzumvi-eye-drop-for-presbyopia"],["Pharmacy Times","https://www.pharmacytimes.com/view/fda-approves-phentolamine-eye-drop-for-presbyopia-in-adults"],["Ophthalmology Times","https://www.ophthalmologytimes.com/view/fda-approves-phentolamine-ophthalmic-solution-0-75-ryzumvi-for-presbyopia"]]},
+    {lab:true, t:"Aceclidina (VIZZ): persistência depende de seleção e orientação", d:"2026-09", tags:["Congresso"], s:"Dados apresentados no ESCRS 2026 sugerem que escolher bem o paciente e educá-lo é o que sustenta o uso do colírio.", src:[["Ophthalmology Times","https://www.ophthalmologytimes.com/modern-medicine-now-top-story"]]},
+    {t:"Catarata em Moçambique: qualidade de vida mais que dobra em 1 ano", d:"2026-11-06", tags:["Saúde global"], s:"Estudos apoiados pela Sightsavers mostraram escore mediano de qualidade de vida de 38,5 para 81 aos 12 meses, além de ganhos econômicos.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {t:"Cirurgia de catarata não é neutra para o vítreo", d:"2026-11-06", tags:["Revisão"], s:"Artigo revisa o exame vitreorretiniano que o cirurgião de catarata deve fazer antes e depois da facectomia.", src:[["Ophthalmology Times","https://www.ophthalmologytimes.com/view/eyes-on-october-2026-aao-and-euretina-highlights-a-trio-of-fda-approvals-and-optogenetics-takes-the-spotlight"]]}
+  ],
+  market:[
+    {iol:true, t:"Z Optics leva ensaio da Z+ Virtual Aperture ao Canadá", d:"2026-11-03", tags:["Aparelho"], s:"O estudo europeu da LIO passou a incluir centros canadenses; sem resultados divulgados.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {lab:true, t:"Yuvezzi lança prescrição por telemedicina", d:"2026-11-09", tags:["Negócios"], s:"Colírio de carbacol 2,75% + brimonidina 0,1% para presbiopia (aprovado em jan/2026) agora com avaliação virtual de elegibilidade.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {iol:true, t:"Bausch + Lomb destaca enVista Aspire e IC-8 Apthera na AAO", d:"2026-10-10", tags:["Aparelho"], s:"Portfólio premium de LIOs em evidência no estande, sem dados novos divulgados.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]},
+    {t:"J&J anuncia compromisso global de acesso à cirurgia de catarata", d:"2026-11-02", tags:["Negócios"], s:"Expansão de triagem, cirurgia e treinamento; o programa Sight For Kids já alcançou quase 60 milhões de crianças.", src:[["Eyewire+","https://eyewire.news/rss"]]}
+  ]
+},
+
+{ id:"cornea", name:"Córnea & Superfície", color:"#138d75", desc:"Ceratocone, transplante, olho seco e superfície ocular",
+  weekly:{ title:"Ceratocone e endotélio: densidade cai com a gravidade, mas fica no normal", date:"10 nov 2026",
+    body:"<p>Análise de 477 olhos do programa de fase 3 da Epion (publicada na <i>Cornea</i>) mostrou que a densidade de células endoteliais diminui com a gravidade do ceratocone e com a idade, porém permanece, na maioria, dentro da faixa normal.</p>",
+    pearl:"<b>Pérola:</b> como o endotélio do ceratocone costuma estar preservado, a DALK é atraente — mantém o endotélio do receptor e elimina o risco de rejeição endotelial. Lembre dos sinais: estrias de Vogt, anel de Fleischer, Munson e Rizzutti; hidropsia aguda = ruptura da Descemet.",
+    src:[["Eyewire+","https://eyewire.news/rss"]] },
+  articles:[
+    {lab:true, t:"Epioxa (epi-on): resultados sustentados em 3 anos", d:"2026-10-08", tags:["Fase 3"], s:"Após uma única sessão de cross-linking sem desepitelização, Kmax manteve melhora de 1,9 D; 29% dos olhos ganharam ≥2 linhas de AV e 20% ≥3 linhas. Sem eventos adversos graves (38 olhos, extensão do fase 3).", src:[["Eyewire+","https://eyewire.news/news/glaukos-reports-3-year-epioxa-data-showing-sustained-corneal-flattening-in-keratoconus"],["Optometry Times","https://www.optometrytimes.com/view/epioxa-epi-on-cross-linking-holds-keratoconus-gains-at-three-years"]]},
+    {lab:true, t:"CSB-001 para deficiência límbica", d:"2026-10-11", tags:["Pesquisa"], s:"Oremepermina alfa (Claris Bio) busca regenerar o epitélio corneano modulando inflamação e fibrose na deficiência de células-tronco límbicas.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]},
+    {lab:true, t:"Derivado de membrana amniótica em olho seco: fase 2", d:"2026-10-11", tags:["Fase 2"], s:"TTAX03 (BioTissue) contra solução salina: a dose mais alta teve a maior melhora de sintomas e coloração corneana no dia 85.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]},
+    {t:"Terapias celulares para edema corneano avançam", d:"2026-10-22", tags:["FDA","Fase 3"], s:"EO2002 (Emmecell) recebeu designação RMAT e o AURN001 (Aurion) completou a inclusão do fase 3 ASTRA, ambos para disfunção endotelial.", src:[["Healio","https://www.healio.com/news/ophthalmology/20261022/ophthalmology-industry-pipeline"]]},
+    {lab:true, t:"Ianalumabe na síndrome de Sjögren (NEJM)", d:"2026-11-09", tags:["Fase 3"], s:"Dois fase 3 com 779 pacientes: melhora da atividade sistêmica em 48 semanas, mas não dos sintomas relatados pelos pacientes.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {t:"Adição de tecido corneano em ectasia", d:"2026-11-06", tags:["Congresso"], s:"Em candidatos bem selecionados, a ceratoplastia por adição de tecido (CTAK) teve alta satisfação dos pacientes.", src:[["Healio","https://www.healio.com/ophthalmology/ophthalmic-business/news/online/%7b81e27130-611e-4f7b-b21b-e880bb6b73de%7d/eylea-sales-up-in-first-quarter"]]}
+  ],
+  market:[
+    {lab:true, t:"Brasil: Anvisa suspende colírios da Excelvision", d:"2026-07-17", tags:["Brasil"], s:"Importação suspensa por falhas de esterilização; proibidos lotes de Hyabak e Thealoz Duo fabricados a partir de 5/6/2026.", src:[["O Povo","https://mais.opovo.com.br/jornal/cidades/2026/07/21/anvisa-suspende-importacao-e-uso-de-colirios-fabricados-pela-excelvision.html"]]},
+    {t:"TearCare ganha código de insumo no CMS", d:"2026-11-06", tags:["Aparelho"], s:"SmartLids recebem valor de US$ 1.000 a partir de 1/1/2027; o sistema também teve indicação ampliada para função meibomiana.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {lab:true, t:"LB001 (TSG-6) para olho seco conclui pré-clínico", d:"2026-11-05", tags:["Pesquisa"], s:"Link Biologics planeja IND no 1º trimestre de 2027.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {lab:true, t:"Treyegen para conjuntivite infecciosa entra em fase 1/2", d:"2026-11-02", tags:["Fase 2"], s:"Combinação de ranpirnase, tobramicina e oximetazolina (Okogen); 1º paciente dosado na Índia.", src:[["Eyewire+","https://eyewire.news/rss"]]}
+  ]
+},
+
+{ id:"estrabismo", name:"Estrabismo & Pediatria", color:"#e07b18", desc:"Estrabismo, ambliopia e miopia infantil",
+  weekly:{ title:"Atropina 0,01%: comitê do FDA questiona robustez do SYD-101", date:"30 out 2026 · decisão pendente",
+    body:"<p>O comitê consultivo do FDA revisou o SYD-101 (Sydnexis), recusado em 2025. O estudo STAR atingiu o desfecho primário, mas o FDA vê significância «limítrofe» e benefício clínico duvidoso; o presidente interino do comitê disse que o resultado não é robusto. Especialistas defenderam a aprovação, citando dependência de farmácias de manipulação. O produto já é aprovado na Europa e no Reino Unido como Ryjunea (Santen).</p>",
+    pearl:"<b>Pérola:</b> no LAMP, 0,05% foi a concentração mais eficaz; 0,01% tem efeito modesto sobre o comprimento axial. No ATOM2, o rebote ao suspender foi maior nas concentrações mais altas.",
+    src:[["Healio","https://www.healio.com/news/optometry/20261030/fda-committee-considers-syd101-for-pediatric-myopia"],["Eyewire+","https://eyewire.news/news/fda-advisory-committee-to-review-sydnexis-syd-101-for-pediatric-progressive-myopia"]] },
+  articles:[
+    {t:"Adultos com estrabismo têm dificuldade de conseguir consulta", d:"2026", tags:["Artigo"], s:"Estudo «cliente oculto» na <i>JAMA Ophthalmology</i>: só 23,8% de 1.060 serviços de oftalmopediatria nos EUA ofereceram consulta a um adulto com estrabismo, com diferenças por tipo de seguro.", src:[["JAMA Ophthalmol (resumo)","https://www.citedrive.com/en/discovery/potential-disparities-in-access-to-adult-strabismus-care/"]]},
+    {t:"Fotorrastreador por birrefringência perde para autorrefrator", d:"2026-05-21", tags:["Artigo"], s:"Na <i>JAMA Ophthalmology</i>, o autorrefrator tradicional teve maior sensibilidade que o dispositivo de birrefringência retiniana para ambliopia e erros refrativos significativos.", src:[["LVHN / JAMA Ophthalmol","https://scholarlyworks.lvhn.org/pediatrics/4057"]]},
+    {t:"Terapia binocular Luminopia: dados de registro", d:"2026-10-11", tags:["Congresso"], s:"No PUPiL, a AV melhorou em todos os grupos e a estereoacuidade basal foi o melhor preditor. Crianças com ~30 meses de tratamento convencional prévio ainda ganharam visão.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]},
+    {t:"Brasil: CBO e SBOP lançam cartilha sobre telas e miopia", d:"2026-09-11", tags:["Brasil"], s:"«Mais Tempo ao Ar Livre, Mais Saúde para os Olhos» foi lançada no Congresso CBO, durante o Projeto Pequenos Olhares, que atendeu cerca de mil crianças.", src:[["Correio da Manhã","https://www.correiodamanha.com.br/especiais/2026/10/324945-oftalmologistas-alertam-para-utilizacao-excessiva-de-telas-e-miopia-em-criancas.html"]]}
+  ],
+  market:[
+    {t:"Luma: eye-tracking para avaliação oculomotora e binocular", d:"2026-11-02", tags:["Aparelho"], s:"A Hundred Vision lançou sistema com 11 testes em 5 domínios para medida objetiva; não faz diagnóstico.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {t:"Lentes DOT para controle de miopia: novos dados", d:"2026-10-04", tags:["Aparelho"], s:"A SightGlass Vision apresentou três conjuntos de dados das lentes de óculos com tecnologia de difusão óptica.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-04/academy-in-anaheim-research-product-and-optometry-innovations/"]]}
+  ]
+},
+
+{ id:"neuro", name:"Neuro-oftalmo", color:"#4b5bd6", desc:"Nervo óptico, vias visuais e motilidade",
+  weekly:{ title:"GLP-1 e NAION: FDA exige alerta em toda a classe", date:"10–11 nov 2026",
+    body:"<p>O FDA vai incluir NAION na seção de advertências de todos os agonistas do receptor de GLP-1, citando metanálise com 6,4 vs 3,8 casos por 100 mil pessoas-ano. AAO, NANOS e AOA responderam que o risco é raro, a causalidade não está comprovada e que perda visual súbita exige avaliação oftalmológica imediata.</p>",
+    pearl:"<b>Pérola:</b> NAION = perda visual súbita e indolor, muitas vezes ao acordar, com defeito altitudinal (geralmente inferior) e edema de disco setorial; o olho contralateral costuma ter disco pequeno, sem escavação («disc at risk»). Pergunte sobre semaglutida/tirzepatida na anamnese e descarte arterítica (VHS, PCR, sintomas de ACG) acima de 50 anos.",
+    src:[["Eyewire+ (FDA)","https://eyewire.news/rss"],["Healio","https://www.healio.com/ophthalmology/ophthalmic-business/news/online/%7b81e27130-611e-4f7b-b21b-e880bb6b73de%7d/eylea-sales-up-in-first-quarter"]] },
+  articles:[
+    {lab:true, t:"Cenegermina entra em fase 3 para NAION", d:"2026-10-22", tags:["Fase 3"], s:"A Dompé incluiu o 1º paciente no estudo Galassia-NAION-301 com o fator de crescimento neural recombinante.", src:[["Healio","https://www.healio.com/news/ophthalmology/20261022/ophthalmology-industry-pipeline"]]},
+    {lab:true, t:"Satralizumabe com revisão prioritária para MOGAD", d:"2026-10-22", tags:["FDA"], s:"Pedido suplementar da Genentech/Roche para doença associada ao anticorpo anti-MOG recebeu prioridade.", p:"Neurite óptica por MOG: frequentemente bilateral, com edema de disco importante e acometimento perineural na RM; boa resposta a corticoide, mas recidiva ao desmame.", src:[["Healio","https://www.healio.com/news/ophthalmology/20261022/ophthalmology-industry-pipeline"]]},
+    {lab:true, t:"Atrofia óptica dominante: antissenso para elevar OPA1", d:"2026-10-11", tags:["Fase 1"], s:"STK-002 (Stoke) apresentou dados das primeiras coortes do estudo OSPREY; novas coortes no 1º semestre de 2027.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]}
+  ],
+  market:[
+    {t:"Assistente de IA para óculos de baixa visão", d:"2026-11-02", tags:["Aparelho"], s:"Eyedaptic lançou o Eva, que ajusta por conversa as configurações dos óculos EYE7.", src:[["Eyewire+","https://eyewire.news/rss"]]}
+  ]
+},
+
+{ id:"plastica", name:"Plástica & Órbita", color:"#b0417a", desc:"Oculoplástica, órbita e doença ocular tireoidiana",
+  weekly:{ title:"Anti-FcRn da Viridian: fase 1 positiva", date:"9 nov 2026",
+    body:"<p>O VRDN-008 reduziu em até 74% a IgG em voluntários saudáveis, com dose a cada 8 semanas; estudo registracional (miastenia gravis) previsto para meados de 2027. A classe anti-FcRn também é estudada em TED e Graves, por reduzir autoanticorpos IgG como o TRAb.</p><p>Na mesma empresa: <b>Lumvoa</b> (veligrotug), aprovado em junho como 2º tratamento para TED e o 1º com bula para doença ativa e crônica; <b>elegrobart</b> SC com BLA no 1º trimestre de 2027.</p>",
+    pearl:"<b>Pérola:</b> TED ativa = CAS ≥3/7. Anti-IGF-1R (teprotumumabe e sucessores): monitorar hiperglicemia, sintomas auditivos (zumbido/hipoacusia) e piora de doença inflamatória intestinal.",
+    src:[["Eyewire+","https://eyewire.news/rss"],["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]] },
+  articles:[
+    {lab:true, t:"Elegrobart SC (REVEAL-1): proptose responde com poucas doses", d:"2026-03-31", tags:["Fase 3"], s:"Respondedores de proptose em 54% (a cada 4 semanas) e 63% (a cada 8 semanas) vs 18% com placebo na semana 24; diplopia resolvida em 51% vs 16%. Eventos auditivos restritos a zumbido.", src:[["Optometry Times","https://www.optometrytimes.com/view/elegrobart-meets-primary-end-points-clinically-meaningful-proptosis-responder-rate-in-phase-3-topline-reveal-1-trial"]]},
+    {t:"Como o teprotumumabe reduz a proptose: multiômica da órbita", d:"2026-10-11", tags:["Pesquisa"], s:"Grupo da UC San Diego comparou tecido orbitário de TED ativa, crônica, reativada e tratada, mapeando as vias celulares envolvidas.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]},
+    {lab:true, t:"Linsitinibe oral entra em fase 3 para TED", d:"2026-10-22", tags:["Fase 3"], s:"Sling Therapeutics dosou os primeiros pacientes do estudo global ORBIT em TED ativa moderada a grave.", src:[["Healio","https://www.healio.com/news/ophthalmology/20261022/ophthalmology-industry-pipeline"]]}
+  ],
+  market:[
+    {lab:true, t:"Tepezza subcutâneo em fase 3", d:"2026-10-11", tags:["Fase 3"], s:"A Amgen testa um injetor corporal SC; resultados iniciais positivos foram divulgados em abril.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]}
+  ]
+},
+
+{ id:"uveite", name:"Uveíte", color:"#9a6a1f", desc:"Inflamação ocular e edema macular uveítico",
+  weekly:{ title:"Edema macular uveítico: KSI-101 com resultado de fase 3 em dezembro", date:"Radar · dez 2026",
+    body:"<p>A Kodiak espera o 1º resultado de fase 3 do KSI-101 no edema macular secundário à inflamação ainda em dezembro, após mostrar dados de fase 1b (APEX) na AAO. Também na AAO: dados de fase 4 (SYNCHRONICITY) do implante de fluocinolona 0,19 mg na uveíte posterior não infecciosa crônica.</p>",
+    pearl:"<b>Pérola:</b> o edema macular é a principal causa de perda visual na uveíte. No estudo POINT, triancinolona intravítrea e implante de dexametasona foram superiores à triancinolona periocular.",
+    src:[["Eyewire+","https://eyewire.news/news/kodiak-reports-phase-3-daybreak-trial-meets-primary-endpoints-for-zenkuda-in-wet-amd"],["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]] },
+  articles:[
+    {t:"Catarata no olho uveítico: como evitar complicações", d:"2026-10-18", tags:["Congresso"], s:"Na AAO, Anjum Koreishi revisou estratégias de prevenção de complicações após facectomia em pacientes com uveíte.", p:"Regra clássica: operar com o olho quieto por ≥3 meses e cobrir com corticoide perioperatório (tópico ± oral/intravítreo conforme histórico).", src:[["Ophthalmology Times","https://www.ophthalmologytimes.com/shorts/the-unmet-need-for-long-lasting-dme-treatment"]]},
+    {t:"Artrite reumatoide e o olho", d:"2026-11-09", tags:["Revisão"], s:"Revisão sobre o acometimento ocular mais frequente na AR: superfície ocular, esclera e trato uveal.", src:[["Healio","https://www.healio.com/ophthalmology/ophthalmic-business/news/online/%7b81e27130-611e-4f7b-b21b-e880bb6b73de%7d/eylea-sales-up-in-first-quarter"]]}
+  ],
+  market:[
+    {lab:true, t:"ILUVIEN em uveíte posterior: fase 4", d:"2026-10-11", tags:["Fase 4"], s:"A ANI Pharmaceuticals apresentou o SYNCHRONICITY como late-breaker na AAO (números ainda não divulgados).", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-11/academy-in-nola-retina-durability-gene-therapies-and-ted-data-lead-clinical-highlights/"]]}
+  ]
+},
+
+
+{ id:"lios", name:"LIOs", color:"#5e35b1", desc:"Lentes intraoculares: lançamentos, aprovações e dados",
+  subs:["Lançamentos & aprovações"],
+  weekly:{ title:"LIOs em movimento: Zeiss estreia em fácicas e a 1ª LIO em espiral chega aos EUA", date:"10 nov 2026",
+    body:"<ul><li><b>Zeiss PT Lunana</b> (10/11) — primeira LIO fácica da Zeiss, aprovada na China; comercialização em 2027.</li><li><b>RayOne Galaxy</b> (24/09) — óptica espiral não difrativa desenhada com IA, aprovada pelo FDA; desenvolvida com o brasileiro João Lyra.</li><li><b>J&amp;J SmartLOAD</b> (AAO) — injetor de titânio reutilizável com cartucho pré-carregado; PureSee + Odyssey passam de 1 milhão de implantes.</li></ul>",
+    pearl:"<b>Pérola:</b> difrativas/trifocais = mais independência de óculos para perto, mais halos e menos contraste; EDOF refrativas = contraste próximo da monofocal, perto parcial. Cautela com multifocais em maculopatia, glaucoma avançado, córnea irregular e em quem dirige muito à noite.",
+    src:[["Eyewire+","https://eyewire.news/rss"],["Glance","https://glance.eyesoneyecare.com/stories/2026-09-28/fda-approves-rayner-s-rayone-galaxy-spiral-iol/"],["Ophthalmology Times","https://www.ophthalmologytimes.com/view/johnson-johnson-spotlights-contrast-data-1-million-tecnis-implants-and-smartload-delivery"]] },
+  articles:[
+    {sub:"Lançamentos & aprovações", t:"Zeiss PT Lunana: primeira LIO fácica da Zeiss aprovada na China", d:"2026-11-10", tags:["Aparelho"], s:"A NMPA chinesa aprovou a lente; a Zeiss planeja comercializá-la a partir de 2027.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {sub:"Lançamentos & aprovações", t:"RayOne Galaxy: 1ª LIO em espiral aprovada nos EUA", d:"2026-09-24", tags:["FDA","Aparelho"], s:"Rayner obteve aprovação para a RayOne Galaxy e a versão tórica: óptica espiral não difrativa, desenhada com IA, para visão contínua de longe a perto com menos halos. Desenvolvida em colaboração com o brasileiro João Lyra.", src:[["FDA (SSED)","https://www.accessdata.fda.gov/cdrh_docs/pdf6/P060011S045B.pdf"],["Glance","https://glance.eyesoneyecare.com/stories/2026-09-28/fda-approves-rayner-s-rayone-galaxy-spiral-iol/"],["Eyewire+","https://eyewire.news/news/fda-approves-rayners-rayone-galaxy-spiral-iol-platform"]]},
+    {sub:"Lançamentos & aprovações", t:"J&J lança SmartLOAD e soma 1 milhão de PureSee/Odyssey implantadas", d:"2026-10-28", tags:["Aparelho"], s:"Sistema de inserção que une injetor de titânio reutilizável e cartucho descartável pré-carregado, lançado com a Tecnis Eyhance. A empresa também apresentou dados de contraste e ajustes no Veritas e na peça de mão Ellips FX.", src:[["Ophthalmology Times","https://www.ophthalmologytimes.com/view/johnson-johnson-spotlights-contrast-data-1-million-tecnis-implants-and-smartload-delivery"],["Eyewire+","https://eyewire.news/news/johnson-johnson-to-highlight-iol-contrast-data-smartload-delivery-technology-at-aao"]]},
+    {sub:"Lançamentos & aprovações", t:"Alcon lança Clareon TruPlus monofocal e tórica", d:"2026-04-06", tags:["Aparelho"], s:"Nova geração de LIO monofocal e tórica da plataforma Clareon, lançada nos EUA no ASCRS 2026.", src:[["CRSToday","https://crstoday.com/news/alcon-launches-clareon-truplus-enhanced-design-monofocal-and-toric-iols-at-ascrs-2026/2486726/"]]}
+  ],
+  market:[]
+},
+
+{ id:"aparelhos", name:"Aparelhos", color:"#0e7c86", desc:"Lentes de fundoscopia, lentes de contato, instrumentos, plataformas cirúrgicas e diagnóstico",
+  subs:["Lentes de fundoscopia & gonioscopia","Lentes de contato","Plataformas cirúrgicas & instrumentos","Diagnóstico & imagem"],
+  weekly:{ title:"Volk ClearField Pro: uma lente para examinar e tratar a retina", date:"9 out 2026",
+    body:"<p>A Volk Optical (grupo Halma) lançou na AAO 2026 a ClearField Pro, lente para oftalmoscopia binocular indireta (BIO) que junta exame da retina e laser indireto numa mesma lente, preservando detalhe e contraste nas duas situações.</p><p>Também na AAO: a Haag-Streit lançou o simulador Eyesi Surgical 3.0, e a Heidelberg mostrou o microscópio digital Opera e a OCTA de 250 kHz do Spectralis.</p>",
+    pearl:"<b>Pérola — escolha da lente de BIO:</b> quanto maior a dioptria, maior o campo e menor a magnificação. 20D é a lente padrão; 28D/30D dão campo maior e passam por pupila pequena (úteis em criança e ROP); 14D–15D ampliam mais para o polo posterior. A imagem é real, invertida e revertida.",
+    src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-09/volk-optical-unveils-clearfield-pro-ophthalmic-lens/"],["Retinal Physician","https://retinalphysician.com/news/2026/volk-launches-clearfield-pro-retinal-lens/"],["Glance (AAO)","https://glance.eyesoneyecare.com/stories/2026-10-12/academy-in-nola-ophthalmic-product-and-industry-updates/"]] },
+  articles:[
+    {sub:"Lentes de fundoscopia & gonioscopia", t:"Volk ClearField Pro: lente de BIO para exame e laser", d:"2026-10-09", tags:["Aparelho"], s:"Nova lente de oftalmoscopia binocular indireta da Volk que combina exame da retina e laser indireto, preservando detalhe e contraste. Estreou na AAO 2026.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-09/volk-optical-unveils-clearfield-pro-ophthalmic-lens/"],["Retinal Physician","https://retinalphysician.com/news/2026/volk-launches-clearfield-pro-retinal-lens/"],["Eyewire+","https://eyewire.news/news/volk-optical-launches-clearfield-pro-lens-for-retinal-examination-and-laser-treatment"]]},
+    {sub:"Plataformas cirúrgicas & instrumentos", t:"Eyesi Surgical 3.0: nova geração do simulador de cirurgia", d:"2026-10-12", tags:["Aparelho"], s:"A Haag-Streit lançou globalmente a 3ª geração do seu simulador de cirurgia oftalmológica em realidade virtual, usado no treinamento de residentes.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-10-12/academy-in-nola-ophthalmic-product-and-industry-updates/"]]},
+    {sub:"Lentes de contato", t:"Acuvue Oasys Max 2-Week recebe marca CE", d:"2026-09-10", tags:["Aparelho"], s:"Lente quinzenal reutilizável da J&J com tecnologias TearStable e OptiBlue (filtra 60% da luz azul-violeta). Lançamento europeu escalonado a partir do fim de 2026.", src:[["Business Wire","https://secure.businesswire.com/news/home/20260910357172/en/Johnson-Johnson-Receives-CE-Marking-for-ACUVUE-OASYS-MAX-Reusable-Contact-Lenses"],["Review of Optometry","https://www.reviewofoptometry.com/article/in-their-own-words-tme"]]},
+    {sub:"Lentes de contato", t:"TOTAL30 Multifocal for Astigmatism chega aos EUA", d:"2026-02-17", tags:["Aparelho"], s:"Alcon lançou a única lente mensal multifocal tórica com tecnologia de gradiente de água.", src:[["Review of Optician","https://reviewob.com/alcon-launches-total30-multifocal-for-astigmatism/"]]},
+    {sub:"Lentes de contato", t:"Primeira diária multifocal tórica chega ao Reino Unido", d:"2026-02-04", tags:["Aparelho"], s:"A J&J lançou a Acuvue Oasys Max 1-Day Multifocal for Astigmatism no Reino Unido e na Irlanda, completando a família diária para astigmatas.", src:[["AOP","https://www.aop.org.uk/ot/news/2026/02/04/uk-rollout-announced-for-acuvue-oasys-max-1day-multifocal-and-astigmatism"],["The Ophthalmologist","https://theophthalmologist.com/issues/2026/articles/february/closing-the-daily-disposable-gap-in-presbyopic-astigmatism/"]]},
+    {sub:"Lentes de contato", t:"Precision7: Alcon cria a lente de troca semanal", d:"2026-02-02", tags:["Aparelho"], s:"Nova categoria de lente de contato com troca a cada 7 dias (tecnologia Activ-Flo), lançada no Canadá em fevereiro e no Reino Unido em março.", src:[["AOP","https://www.aop.org.uk/ot/news/2026/02/26/alcon-reveals-precision7"],["Brief Glance","https://briefglance.com/articles/alcons-precision7-aims-to-disrupt-the-canadian-contact-lens-market"]]},
+    {sub:"Lentes de contato", t:"MyDay MiSight 1 Day: controle de miopia em silicone-hidrogel", d:"2026-01-13", tags:["Aparelho"], s:"A CooperVision levou o desenho MiSight de controle de miopia para o material silicone-hidrogel da linha MyDay, na mesma faixa de poder do MiSight original.", src:[["AOP","https://www.aop.org.uk/ot/our-journal/april-may-2026/whats-happening-in"],["Vision Monday","https://www.visionmonday.com/launchpad/contact-lenses-1/"]]},
+    {sub:"Lentes de contato", t:"Deseyne: 1ª lente de contato EDOF para presbiopia liberada pelo FDA", d:"2026-01-07", tags:["FDA","Aparelho"], s:"Lente diária com zona óptica única e centro hiper-refrativo que estende a profundidade de foco, sem as múltiplas zonas das multifocais.", src:[["CRSToday Europe","https://crstodayeurope.com/news/fda-clears-first-daily-disposable-soft-contact-lens-using-edof-technology-for-presbyopia/2486195/"],["CL Spectrum","https://clspectrum.com/news/2026/fda-clears-first-edof-contact-lens-for-presbyopia/"]]},
+    {sub:"Plataformas cirúrgicas & instrumentos", t:"Heidelberg Opera: microscópio cirúrgico 100% digital nos EUA", d:"2026-10-10", tags:["Aparelho"], s:"Plataforma de visualização digital em telas grandes, com realce de imagem, demonstrada em wet lab na AAO 2026.", src:[["Eyewire+","https://eyewire.news/news/heidelberg-engineering-to-showcase-imaging-surgical-visualization-advances-at-aao-2026"]]},
+    {sub:"Plataformas cirúrgicas & instrumentos", t:"Zeiss leva a plataforma EVA NEXUS para a catarata", d:"2026-08-27", tags:["Aparelho"], s:"Sistema de faco derivado da plataforma da DORC (comprada por € 985 milhões em 2024), com peça de mão EVA SURE TOUCH e predefinições por grau de catarata ajustáveis pelo pedal ou pela tela.", src:[["Brief Glance","https://briefglance.com/articles/zeiss-ups-the-ante-in-ophthalmic-surgery-with-new-cataract-system"]]},
+    {sub:"Plataformas cirúrgicas & instrumentos", t:"Alcon UNITY CS: faco com estimativa de temperatura na incisão", d:"2026-06-15", tags:["Aparelho"], s:"Versão só-catarata da plataforma UNITY, com peça de mão inédita que estima a temperatura na incisão. A UNITY VCS combina vitrectomia e faco no mesmo console.", src:[["Business Wire","https://www.businesswire.com/news/home/20260615207560/en/"]]},
+    {sub:"Diagnóstico & imagem", t:"Spectralis ganha OCTA de 250 kHz", d:"2026-06-11", tags:["FDA","Aparelho"], s:"Nova versão de software liberada pelo FDA traz a aquisição de angio-OCT mais rápida já disponível na plataforma, além de melhor rastreamento ocular.", src:[["Eyewire+","https://eyewire.news/news/heidelberg-engineering-to-showcase-imaging-surgical-visualization-advances-at-aao-2026"],["Ophthalmology Times","https://www.ophthalmologytimes.com/view/zeiss-clinic-360-receives-fda-510k-clearance"]]},
+    {sub:"Diagnóstico & imagem", t:"Pentacam Cornea OCT liberado pelo FDA", d:"2026-04-09", tags:["FDA","Aparelho"], s:"Combina Scheimpflug e OCT de domínio espectral com resolução de 1,9 µm numa medida de 1 segundo, incluindo mapa de espessura epitelial.", src:[["Glance","https://glance.eyesoneyecare.com/stories/2026-04-09/fda-clears-the-oculus-pentacam-cornea-oct/"]]}
+  ],
+  market:[]
+},
+
+{ id:"labs", name:"Laboratórios & Colírios", color:"#2f8f3a", desc:"Colírios, injetáveis, implantes farmacológicos e notícias de laboratórios",
+  subs:["Colírios","Brasil & Anvisa"],
+  weekly:{ title:"Brasil: Dompé e Multicare Pharma fecham parceria em oftalmologia", date:"4 nov 2026",
+    body:"<p>A italiana Dompé — fabricante da cenegermina (NGF recombinante) — e a brasileira Multicare Pharma, focada em doenças raras e de alta complexidade, anunciaram parceria estratégica no Brasil para ampliar informação e conhecimento em doenças oftalmológicas, unindo a experiência da Dompé em oftalmologia ao conhecimento da Multicare sobre o sistema de saúde brasileiro.</p><p>Contexto: a Dompé também tem a cenegermina em fase 3 para NAION e a isociclosporina em fase 3 para ceratoconjuntivite atópica.</p>",
+    pearl:"<b>Pérola:</b> ceratite neurotrófica — estágios de Mackie: 1) ceratopatia puntata/epitélio irregular; 2) defeito epitelial persistente; 3) úlcera estromal ± perfuração. A cenegermina é usada 1 gota 6×/dia por 8 semanas.",
+    src:[["PR Newswire","https://www.prnewswire.com/br/comunicados-para-a-imprensa/multicare-pharma-e-dompe-anunciam-parceria-estrategica-para-apoiar-a-conscientizacao-sobre-doencas-oftalmologicas-no-brasil-302929631.html"],["Business Wire (Dompé)","https://www.businesswire.com/news/home/20251215351347/es"]] },
+  articles:[
+    {sub:"Colírios", t:"Brytly: apraclonidina de venda livre para olho vermelho", d:"2026-10-16", tags:["FDA","Colírio"], s:"O FDA aprovou a apraclonidina 0,125% da Alcon sem receita para vermelhidão ocular: age em 1 minuto e dura até 12 horas; a partir de 12 anos, até 2 vezes ao dia.", p:"Teste de Horner: a apraclonidina tem fraco efeito α1; na pupila de Horner, com hipersensibilidade de denervação, ela dilata — a anisocoria se inverte.", src:[["Healio","https://www.healio.com/news/optometry/20261016/fda-approves-brytly-rednessrelieving-drop"]]},
+    {sub:"Colírios", t:"Reproxalap: 3ª recusa do FDA e recurso formal", d:"2026-03-17", tags:["FDA","Colírio"], s:"A Aldeyra recebeu a 3ª carta de resposta completa para olho seco e prepara um pedido formal de resolução de disputa, com reunião no FDA prevista para o 4º trimestre de 2026.", src:[["Optometry Times","https://www.optometrytimes.com/view/aldeyra-receives-third-complete-response-letter-from-fda-for-reproxalap"],["Eyewire+","https://eyewire.news/news/aldeyra-plans-to-appeal-fda-rejection-of-reproxalap-nda"]]},
+    {sub:"Brasil & Anvisa", t:"SUS: regra para frascos de colírio midriático nas unidades móveis", d:"2026-02-19", tags:["Brasil","Colírio"], s:"Nota técnica da AgSUS tornou obrigatório, nas unidades móveis de oftalmologia e catarata do programa Agora Tem Especialistas, registrar data de abertura e responsável pelos frascos de tropicamida, fenilefrina e ciclopentolato, com critérios restritivos de uso.", p:"Frascos multidose reutilizados contaminam: a nota cita estudo com contaminação em 8 de 95 frascos sem conservante (~8%).", src:[["AgSUS (Nota Técnica 3)","https://agenciasus.org.br/shared-files/28934/?download=1"]]},
+    {sub:"Brasil & Anvisa", t:"Colírio Lerin deve voltar ao mercado brasileiro", d:"2026-01", tags:["Brasil","Colírio"], s:"A Pharlab planeja relançar em 2026 o Lerin, colírio que havia deixado de ser comercializado pela Allergan.", src:[["NeoFeed","https://neofeed.com.br/?p=200940"]]}
+  ],
+  market:[]
+},
+{ id:"mercado", name:"Negócios", color:"#c9a227", desc:"Fusões, aquisições, acordos e movimentos de empresas — todas as áreas",
+  weekly:{ title:"Anti-VEGF: biossimilar aprovado e Beovu muda de mãos", date:"2–10 nov 2026",
+    body:"<ul><li><b>Lucamzi</b> (ranibizumabe-blrz, Xbrane) aprovado pelo FDA como biossimilar do Lucentis — lançamento nos EUA em 2027.</li><li><b>Imvionix</b> assume o Beovu (brolucizumabe) nos EUA e Canadá, comprado da Novartis.</li><li>No pipeline, <b>Zenkuda</b> e <b>Axpaxli</b> preparam pedidos de registro para o fim de 2026.</li></ul>",
+    pearl:"<b>Contexto Brasil:</b> o ranibizumabe biossimilar Ranivisio (Biomm/Formycon) foi registrado pela Anvisa em maio de 2025, num mercado anti-VEGF estimado pela empresa em R$ 374 milhões/ano.",
+    src:[["Eyewire+","https://eyewire.news/rss"],["Visno Invest","https://visnoinvest.com.br/news/8026/biomm-biom3-obtem-aprovacao-da-anvisa-para-ranivisio"]] },
+  articles:[],
+  market:[
+    {t:"Prism Vision adquire Spectrum Vision Partners", d:"2026-11-05", tags:["Negócios"], s:"Fusão acrescenta 58 unidades de oftalmologia e 5 centros cirúrgicos ambulatoriais em cinco estados americanos.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {t:"HarrowRx: prescrição integrada ao prontuário", d:"2026-11-03", tags:["Negócios"], s:"Plataforma da Harrow permite prescrever seus produtos de marca dentro do próprio sistema eletrônico.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {t:"Zeiss expande modelo Aloka Vision", d:"2026-11-03", tags:["Negócios"], s:"Compromisso, no IAPB, de levar o modelo a pelo menos mais dois países até 2028.", src:[["Eyewire+","https://eyewire.news/rss"]]},
+    {t:"Zeiss Clinic 360 liberado", d:"2026-08-19", tags:["Aparelho"], s:"Plataforma em nuvem, acessada pelo navegador, que reúne dados de exames e prontuário numa visão única do paciente.", src:[["Ophthalmology Times","https://www.ophthalmologytimes.com/view/zeiss-clinic-360-receives-fda-510k-clearance"]]},
+    {t:"iPredict-DR: nova IA para retinopatia diabética", d:"2026-10-22", tags:["Aparelho"], s:"A iHealthScreen obteve 510(k) para triagem de RD mais que leve em adultos.", src:[["Healio","https://www.healio.com/news/ophthalmology/20261022/ophthalmology-industry-pipeline"]]},
+    {t:"Moorfields tem nova presidente do conselho", d:"2026-11-03", tags:["Comunidade"], s:"Aruna Mehta assumiu em 1º de novembro.", src:[["Eyewire+","https://eyewire.news/rss"]]}
+  ]
+}
+];
+
+/* BRIEFINGS — chave = título exato do item. o: o que é · m: como foi feito · r: resultados · i: por que importa · l: limitações/próximos passos */
+const BRIEFS = {
+"Nobel de Medicina 2026 premia a optogenética":{o:"Prêmio Nobel de Fisiologia ou Medicina 2026, anunciado pelo Instituto Karolinska em 5 de outubro, para Karl Deisseroth (Stanford/HHMI), Peter Hegemann (Humboldt) e Georg Nagel (Würzburg).",m:"Hegemann e Nagel identificaram a canalrodopsina, proteína fotossensível da alga Chlamydomonas que abre um canal iônico sob luz azul. Deisseroth a transformou num interruptor luminoso para neurônios (artigo seminal de 2005).",r:["Prêmio de 12 milhões de coroas suecas, dividido igualmente entre os três","Cerimônia de entrega em 10 de dezembro"],i:"A aplicação clínica mais avançada é justamente oftalmológica: optogenética direta para restaurar visão em retinose pigmentar (MOGENRY, com pedido de registro no FDA).",l:"O comitê ressaltou que a técnica é sobretudo uma ferramenta de pesquisa básica."},
+"AAO 2026 (Nova Orleans): os grandes temas":{o:"130ª reunião anual da American Academy of Ophthalmology, 9 a 12 de outubro, na presidência de Christopher J. Rapuano.",m:"Oito Subspecialty Days (retina em dois dias) e sessões científicas, com lançamentos de produtos na área de exposição.",r:["Retina: durabilidade anti-VEGF, atrofia geográfica e terapias gênicas (DAYBREAK, SOL-1, MOGENRY)","IA virou objetivo de aprendizagem formal no Retina Subspecialty Day, com foco em integração ao fluxo clínico","Glaucoma intervencionista: lançamentos como o OMNI Ultra","Dados relevantes em TED (Lumvoa, elegrobart) e uveíte (ILUVIEN)"],i:"Mostra para onde a prática deve caminhar nos próximos 1–2 anos: menos injeções, mais dispositivos e IA embutida.",l:"Boa parte dos dados é de topline ou apresentação oral, ainda sem publicação revisada por pares."},
+"70º Congresso Brasileiro de Oftalmologia (Salvador)":{o:"Congresso anual do CBO, de 9 a 12 de setembro de 2026, em Salvador.",m:"Programação científica com lançamento de documentos para a população e ações assistenciais.",r:["Documento com a rotina ideal de consultas por faixa etária","Cartilha «Mais Tempo ao Ar Livre, Mais Saúde para os Olhos» (CBO + SBOP)","Projeto Pequenos Olhares atendeu cerca de 1 mil crianças e adolescentes","Debates sobre reabilitação visual (95 centros especializados no país) e transplante de córnea"],i:"Posicionamentos do CBO costumam ser cobrados na PNO e orientam políticas públicas.",l:"—"},
+"Fila de transplante de córnea no Brasil cresce 24% em seis meses":{o:"Dados do CBO divulgados durante o congresso nacional.",m:"Comparação do número de pacientes na fila nacional.",r:["37.719 pessoas aguardando córnea","32.639 em dezembro de 2025","Aumento de 24% em seis meses"],i:"Reforça a importância de captação de tecido e de técnicas que economizam córnea (lamelares, endoteliais) e de terapias celulares em desenvolvimento.",l:"Números agregados; não detalham indicação ou região."},
+"CFM reforça refração e diagnóstico de miopia como ato médico":{o:"III Fórum da Câmara Técnica de Oftalmologia do Conselho Federal de Medicina (outubro de 2026).",m:"Painéis sobre exercício ilegal da medicina, ADPF 131 e acesso no SUS.",r:["Reafirmação de que o diagnóstico de miopia e a refração são ato médico","Fiscalização depende de provas e fiscais bem informados","CBO afirmou haver oftalmologistas suficientes para suprir o déficit de consultas do SUS"],i:"Tema de defesa profissional diretamente ligado à prática do residente.",l:"—"},
+"Morre Kevin Waltz, pioneiro da cirurgia refrativa":{o:"Kevin Waltz, OD, MD, faleceu em 9 de novembro de 2026.",m:"—",r:["Reconhecido como inovador em cirurgia refrativa e educador"],i:"—",l:"—"},
+"DAYBREAK: tarcocimab não inferior ao aflibercepte, com metade dos pacientes em 6/6 meses":{o:"Fase 3 da Kodiak com dois candidatos: tarcocimab tedromer (Zenkuda; anti-VEGF ligado a biopolímero) e tabirafusp-ted (KSI-501; bispecífico anti-VEGF/anti-IL-6).",m:"667 pacientes virgens de tratamento com DMRI neovascular, randomizados e duplo-mascarados, 3 braços. Controle: aflibercepte 2 mg em 3 doses mensais e depois a cada 8 semanas. Retratamento por critério «treat-to-dryness» (sem esperar aumento de espessura ou perda de AV). Basal: AV ~20/60 e espessura central ~350 µm.",r:["Tarcocimab: +7,2 vs +7,6 letras (não inferior)","54% em intervalo de 24 semanas no ano 1; outros 29% a cada 12–20 semanas","Mediana pós-carga: 1 injeção vs 5 com aflibercepte","Tabirafusp: +6,3 vs +7,6 letras (p=0,0036 para não inferioridade); espessura −131 vs −138 µm","Nenhuma inflamação intraocular com tarcocimab; 1 caso (0,4%) com tabirafusp; sem endoftalmite ou vasculite oclusiva"],i:"Kodiak planeja BLA multi-indicação do tarcocimab (DMRI, retinopatia diabética, oclusão venosa) no 4º trimestre de 2026, com base em cinco fases 3 positivas.",l:"Resultados de 1 ano; seguimento até a semana 96 em andamento. Estudo de não inferioridade."},
+"SOL-1: implante de axitinibe supera aflibercepte em dose única":{o:"Axpaxli (OTX-TKI, Ocular Therapeutix): hidrogel intravítreo bioabsorvível que libera axitinibe, um inibidor de tirosina-quinase, por 9 a 12 meses.",m:"Estudo de superioridade sob acordo especial (SPA) com o FDA. 344 pacientes recém-diagnosticados, após carga com 2 injeções de aflibercepte, randomizados para dose única de Axpaxli 0,45 mg ou aflibercepte 2 mg. Desfecho primário: perda <15 letras na semana 36.",r:["Semana 36: 74,1% vs 55,8% mantiveram visão (diferença 17,5%; p=0,0006)","Semana 52: 65,9% vs 44,2% (p<0,0001)","Livres de resgate: 80,6 / 74,7 / 68,8% vs 72,1 / 56,4 / 47,7% (semanas 24 / 36 / 52)","Espessura central estável (±30 µm) na semana 36: 55,9% vs 37,8%","Sem endoftalmite, vasculite, descolamento de retina ou migração do implante"],i:"Primeiro agente com novo mecanismo a mostrar superioridade sobre anti-VEGF aprovado em desenho alinhado com o FDA; aponta para tratamento potencialmente anual.",l:"O comparador recebeu dose única (não regime contínuo). O estudo complementar SOL-R, de não inferioridade, tem resultado previsto para o 1º trimestre de 2027."},
+"Duravyu (vorolanibe) falha desfecho primário no LUGANO":{o:"Inserto intravítreo de vorolanibe (EyePoint), outro inibidor de tirosina-quinase de liberação prolongada.",m:"Fase 3 LUGANO em DMRI neovascular.",r:["Não atingiu o desfecho primário no conjunto completo de dados","Resultados favoráveis em carga de tratamento, taxa livre de suplementação e controle anatômico","Em paralelo: fase 2 VERONA em edema macular diabético previamente tratado"],i:"Mostra que a classe TKI não é homogênea: formulação e desenho de estudo fazem diferença (contraste com o SOL-1).",l:"Detalhes numéricos não divulgados no resumo da notícia."},
+"Remigromig (Merck) não inferior ao ranibizumabe no EMD":{o:"Remigromig (MK-3000, ex-EYE103), da Merck.",m:"Fase 2b/3 BRUNELLO no edema macular diabético, comparado ao ranibizumabe.",r:["Não inferioridade ao ranibizumabe em 52 semanas"],i:"Nova molécula entrando na disputa do EMD.",l:"Números não divulgados na fonte; houve divergência entre fontes sobre a indicação (EMD vs DMRI)."},
+"MOGENRY: 4 anos de durabilidade e PDUFA no 1º semestre de 2027":{o:"Sonpiretigene isteparvovec (Nanoscope): AAV2 que entrega uma opsina multicaracterística a células retinianas sobreviventes, por injeção intravítrea única em consultório.",m:"RESTORE: fase 2b/3 multicêntrico, randomizado, duplo-mascarado e controlado com sham; 27 pacientes com RP avançada (18 tratados). Seguimento de longo prazo no REMAIN.",r:["Atingiu os desfechos primário e secundários-chave, com melhora de AV nas semanas 52 e 76","Sem eventos adversos graves relacionados ao tratamento","Dados de durabilidade de 4 anos apresentados na AAO","BLA aceito em setembro de 2026; PDUFA no 1º semestre de 2027"],i:"Seria a primeira terapia independente da mutação para RP com perda visual grave — sem teste genético nem cirurgia sub-retiniana.",l:"Amostra pequena; eventos raros podem só aparecer após uso comercial."},
+"Atrofia geográfica: novas métricas e o inibidor de inflamassoma K8":{o:"Duas frentes em AG: como medir a progressão e um novo alvo terapêutico.",m:"Sadda (Retina Subspecialty Day, AAO) discutiu as limitações da área de crescimento como desfecho. Ambati (Empire Forum 2026) apresentou o fase 2 do K8.",r:["Propostas: ritmo de avanço da borda da lesão e escore de gravidade ponderado pela localização (proximidade da fóvea)","K8 atua sobre o inflamassoma, com esquema posológico pensado para ser conveniente"],i:"Os inibidores de complemento reduzem o crescimento da área, mas com pouco ganho funcional percebido; métricas ligadas à fóvea podem captar melhor o benefício real.",l:"Resultados numéricos do K8 não detalhados nas fontes."},
+"Reprogramar Müller em fotorreceptor: dados pré-clínicos":{o:"Terapia da Mogrify que entrega, por AAV, um fator de transcrição capaz de reprogramar glia de Müller em fotorreceptores.",m:"Estudos em roedores; apresentação no FLORetina-ICOOR 2026 em 3 de dezembro.",r:["Dados pré-clínicos (ainda não divulgados em detalhe)"],i:"Abordagem regenerativa: em vez de salvar células doentes, criar novas.",l:"Fase pré-clínica — longe da prática."},
+"FDA aprova Lucamzi, biossimilar de ranibizumabe":{o:"Lucamzi (ranibizumabe-blrz), da Xbrane.",m:"Aprovação como biossimilar do Lucentis.",r:["Indicado para DMRI neovascular e outras doenças retinianas do rótulo de referência","Lançamento nos EUA previsto para 2027"],i:"Mais concorrência deve pressionar preços de anti-VEGF.",l:"—"},
+"Imvionix compra direitos do Beovu nos EUA e Canadá":{o:"Brolucizumabe, originalmente da Novartis.",m:"Aquisição dos direitos comerciais.",r:["Imvionix passa a ser titular do registro nos EUA e Canadá","Marca o lançamento comercial da empresa","Valores não divulgados"],i:"Novartis sai do produto nesses mercados.",l:"—"},
+"Lytenava: primeiro bevacizumabe oftálmico aprovado pelo FDA":{o:"Bevacizumabe-vikg (Outlook Therapeutics), formulação oftálmica própria.",m:"Aprovação do FDA anunciada em 24 de julho de 2026 para DMRI neovascular.",r:["Primeiro bevacizumabe com aprovação oftálmica nos EUA","Empresa estima o mercado americano de anti-VEGF em ~US$ 8,5 bilhões/ano, com bevacizumabe dominando a 1ª linha"],i:"Substitui o uso off-label fracionado/manipulado por produto com bula e controle de fabricação.",l:"Impacto em custo ainda indefinido."},
+"IA autônoma para retinopatia diabética leva o Prix Galien":{o:"AEYE-DS (AEYE Health), sistema autônomo de triagem de RD liberado pelo FDA.",m:"Premiação Prix Galien USA 2026.",r:["Vencedor na categoria Best Digital Health Solution"],i:"Validação de IA autônoma em triagem fora do consultório oftalmológico.",l:"—"},
+"Robô compacto para cirurgia de retina em desenvolvimento":{o:"Projeto da VisioSurgical Solutions (Suíça) com a Kaleidoscope Innovation.",m:"Desenvolvimento de engenharia.",r:["Meta de precisão melhor que 10 µm"],i:"Precisão relevante para injeções sub-retinianas de terapia gênica e cirurgia de membranas.",l:"Fase de desenvolvimento."},
+"Glaukos licencia biológico tri-específico para retina":{o:"Acordo de licenciamento com a RevOpsis Therapeutics.",m:"Licença exclusiva do RO-104 e acesso à plataforma RevMod.",r:["RO-104: biológico tri-específico, primeiro da classe","Direitos para até quatro outros biológicos de retina","Valores não divulgados"],i:"Glaukos, forte em glaucoma e córnea, avança para a retina.",l:"—"},
+"Brasil: Anvisa ainda sem medicamento registrado para atrofia geográfica":{o:"Cenário regulatório brasileiro para AG.",m:"Grupo da FMRP-USP relatou uso off-label de eculizumabe (inibidor de C5) em 2 pacientes no International Journal of Retina and Vitreous.",r:["Perfil de segurança favorável nos 2 casos","Nenhum fármaco registrado na Anvisa especificamente para AG","Pegcetacoplan (Syfovre) sem registro, com importação excepcional autorizada"],i:"Explica a judicialização para acesso a inibidores de complemento no Brasil.",l:"Relato de 2 pacientes — sem dado de eficácia."},
+"Facectomia como 1ª cirurgia no ângulo fechado chega a 48,4%":{o:"Tendências cirúrgicas em glaucoma apresentadas na AAO 2026.",m:"Dados do registro IRIS e enquetes com especialistas.",r:["Facectomia como cirurgia inicial em adultos ≥50 anos com glaucoma de ângulo fechado: 48,4%","Mudanças nos padrões de trabeculectomia e de cirurgia no glaucoma juvenil"],i:"Consolida a adoção prática do EAGLE.",l:"Dados de registro (observacionais)."},
+"VisiPlate: 2 anos do estudo VITA":{o:"VisiPlate (Avisi Technologies): dispositivo de bolha minimamente invasivo com rede de microcanais.",m:"Estudo VITA, prospectivo e multicêntrico.",r:["Dados de 2 anos apresentados na AAO"],i:"Mais uma alternativa entre MIGS e trabeculectomia.",l:"Resultados numéricos não divulgados na fonte."},
+"LIO com reservatório de bimatoprosta: fase 2 positivo em 12 meses":{o:"BIM-IOL System (SpyGlass Pharma): LIO com almofadas que liberam bimatoprosta.",m:"Fase 2 em glaucoma de ângulo aberto e hipertensão ocular.",r:["Resultado positivo em 12 meses"],i:"Junta facectomia e tratamento hipotensor sustentado, resolvendo adesão.",l:"Números não divulgados na fonte."},
+"PRESERFLO: inclusão concluída no pivotal norte-americano":{o:"MicroShunt PRESERFLO (Glaukos).",m:"Estudo pivotal nos EUA em glaucoma avançado após falha cirúrgica.",r:["Inclusão concluída","Dados de 12 meses de redução de PIO guiarão a estratégia com o FDA"],i:"Pode ampliar opções em olhos já operados.",l:"Ainda sem resultados."},
+"K-911 (bimatoprosta grenod): PDUFA em 30/04/2027":{o:"K-911 / NCX 470 (Kowa, desenvolvido pela Nicox): colírio diário que libera bimatoprosta e óxido nítrico.",m:"Fases 3 Mont Blanc e Denali, contra latanoprosta 0,005%, em GAA ou HO. NDA aceito com revisão padrão de 10 meses.",r:["PDUFA em 30 de abril de 2027","Lançamento nos EUA possível no 2º semestre de 2027","A Nicox relata superioridade do mecanismo duplo sobre bimatoprosta isolada"],i:"Primeiro colírio a combinar via trabecular (NO) e uveoescleral (prostaglandina) numa molécula.",l:"Ainda investigacional."},
+"FDA libera OMNI Ultra (Sight Sciences)":{o:"Nova geração da plataforma OMNI, sem implante.",m:"Liberação do FDA em agosto de 2026; lançamento no estande da AAO.",r:["Canaloplastia e trabeculotomia em passagem única no glaucoma de ângulo aberto"],i:"Simplifica o procedimento combinado.",l:"—"},
+"CMS cria pagamento para a bomba FSYX":{o:"FSYX Ocular Pressure Adjusting Pump, dispositivo não invasivo para glaucoma.",m:"Decisão de reembolso do CMS (EUA).",r:["Taxas de pagamento em vigor a partir de 1º de outubro de 2026"],i:"Abre caminho comercial ao dispositivo.",l:"—"},
+"Espaçador uveal Intercil recebe IDE":{o:"Intercil uveal spacer (Ciliatech).",m:"Isenção para dispositivo investigacional (IDE) concedida pelo FDA.",r:["Autorizado estudo de viabilidade em glaucoma"],i:"Novo conceito de dispositivo para reduzir PIO.",l:"Estudo inicial."},
+"iDose TR pode ser reaplicado":{o:"Implante intracameral de travoprosta 75 µg (Glaukos).",m:"Suplemento de bula aprovado pelo FDA em janeiro de 2026.",r:["Permite reaplicação com protocolo de retratamento"],i:"Transforma o implante numa terapia de manutenção.",l:"—"},
+"TECNIS PureSee chega ao mercado americano":{o:"LIO EDOF puramente refrativa da J&J (modelo ZEN00V), aprovada pelo FDA em 12 de março de 2026.",m:"Pivotal randomizado, mascarado e multicêntrico, com 228 pacientes implantados bilateralmente e ~98% de seguimento em 6 meses.",r:["Indicação: implante no saco capsular com astigmatismo corneano <1,0 D; versão tórica para ≥1,0 D","97% sem distúrbios visuais «muito incômodos»","Única EDOF nos EUA sem advertência de perda de sensibilidade ao contraste","Disponibilidade ampliada em junho de 2026"],i:"Visão de longe e intermediária com perfil de disfotopsia próximo ao de monofocal.",l:"Visão de perto apenas parcial («alguma» visão de perto)."},
+"Fentolamina (Ryzumvi) ganha indicação para presbiopia":{o:"Fentolamina 0,75% sem conservante (Viatris / Opus Genetics), já aprovada para reverter midríase farmacológica; aprovação suplementar em 16/10/2026.",m:"Fases 3 pivotais VEGA-2 e VEGA-3 (este com seguimento de segurança de 48 semanas).",r:["Atingiu desfechos primário e secundários de melhora da visão de perto","Sem eventos adversos graves relacionados ao tratamento","Na bula de midríase: desconforto à instilação 16%, hiperemia conjuntival 12%, disgeusia 6%","Uso uma vez à noite; sem data de lançamento nem preço anunciados","Sem aprovação da Anvisa para presbiopia"],i:"Amplia os colírios para presbiopia com mecanismo diferente dos mióticos colinérgicos.",l:"Especialistas a veem como adjuvante, não substituto de óculos; resultados dependem de iluminação, catarata incipiente e olho seco."},
+"Aceclidina (VIZZ): persistência depende de seleção e orientação":{o:"Aceclidina (VIZZ, LENZ Therapeutics), miótico para presbiopia.",m:"Dados apresentados no ESCRS 2026.",r:["Seleção adequada e educação do paciente associadas a maior persistência de uso"],i:"Na prática, explicar expectativas é tão importante quanto prescrever.",l:"—"},
+"Catarata em Moçambique: qualidade de vida mais que dobra em 1 ano":{o:"Estudos apoiados pela Sightsavers na zona rural de Moçambique.",m:"Avaliação de qualidade de vida e de segurança econômica após cirurgia de catarata.",r:["Escore mediano de qualidade de vida: 38,5 → 81 aos 12 meses","Ganhos de segurança econômica"],i:"Reforça a cirurgia de catarata como uma das intervenções mais custo-efetivas da medicina.",l:"—"},
+"Cirurgia de catarata não é neutra para o vítreo":{o:"Artigo de revisão para cirurgiões de catarata.",m:"Revisão do exame vitreorretiniano.",r:["Recomenda avaliação vitreorretiniana antes e depois da facectomia"],i:"Facectomia acelera o descolamento do vítreo posterior e aumenta o risco de rasgaduras e DR.",l:"—"},
+"Z Optics leva ensaio da Z+ Virtual Aperture ao Canadá":{o:"LIO Z+ Virtual Aperture (Z Optics).",m:"Ensaio clínico europeu ampliado com centros canadenses.",r:["Sem resultados quantitativos divulgados"],i:"—",l:"—"},
+"Yuvezzi lança prescrição por telemedicina":{o:"Carbacol 2,75% + brimonidina 0,1% (Tenpoint), aprovado em janeiro de 2026.",m:"Programa de avaliação virtual.",r:["Adultos com presbiopia verificam elegibilidade on-line"],i:"Primeiro colírio de agente duplo para presbiopia.",l:"—"},
+"Bausch + Lomb destaca enVista Aspire e IC-8 Apthera na AAO":{o:"Portfólio premium de LIOs da B+L.",m:"Apresentações patrocinadas na AAO 2026.",r:["Sem dados novos divulgados"],i:"—",l:"—"},
+"J&J anuncia compromisso global de acesso à cirurgia de catarata":{o:"Compromisso global da Johnson & Johnson.",m:"—",r:["Ampliação de triagem, cirurgia de catarata e treinamento","Programa Sight For Kids já alcançou quase 60 milhões de crianças"],i:"—",l:"—"},
+"Epioxa (epi-on): resultados sustentados em 3 anos":{o:"Riboflavina 5'-fosfato (Glaukos) para cross-linking sem remover epitélio, com oxigênio suplementar e UVA pulsada. Aprovado pelo FDA em outubro de 2025 para ≥13 anos.",m:"Extensão de longo prazo (GLK-202-03) de quem participou do pivotal GLK-202-02: 38 olhos de 35 pacientes, sem nova intervenção; 92% completaram 3 anos.",r:["Melhora sustentada de 1,9 D no Kmax","29% ganharam ≥2 linhas de AV corrigida; 20% ganharam ≥3","Sem eventos adversos graves ou relacionados ao tratamento"],i:"Durabilidade comparável à expectativa do epi-off, com menos dor e recuperação mais rápida.",l:"Amostra pequena; concorrente EpiSmart (Epion) concluiu fase 3 em junho de 2026."},
+"CSB-001 para deficiência límbica":{o:"Oremepermina alfa (Claris Bio), colírio investigacional.",m:"Apresentações no Eyecelerator e na AAO.",r:["Objetivo: regenerar o epitélio corneano e modular inflamação e fibrose","Sem resultados divulgados"],i:"Possível alternativa clínica antes do transplante límbico.",l:"—"},
+"Derivado de membrana amniótica em olho seco: fase 2":{o:"TTAX03 (BioTissue), derivado de membrana amniótica e cordão umbilical.",m:"Fase 2 randomizado, duplo-mascarado: três doses vs salina (1:1:1) em olho seco leve a moderado.",r:["A dose mais alta teve maior melhora de sintomas, secura e coloração corneana no dia 85"],i:"Leva o efeito anti-inflamatório da membrana amniótica para a forma de colírio.",l:"Fase 2."},
+"Terapias celulares para edema corneano avançam":{o:"Duas terapias celulares para disfunção endotelial.",m:"Marcos regulatórios e de inclusão.",r:["EO2002 (Emmecell): designação RMAT","AURN001 (Aurion Biotech): inclusão concluída no fase 3 ASTRA, administração única"],i:"Podem reduzir a dependência de córneas doadoras — relevante diante da fila brasileira.",l:"Ainda sem resultados de fase 3."},
+"Ianalumabe na síndrome de Sjögren (NEJM)":{o:"Anticorpo mensal (anti-BAFF-R) na doença de Sjögren.",m:"Dois estudos de fase 3, 779 pacientes.",r:["Redução da atividade sistêmica da doença na semana 48","Sem melhora nos sintomas relatados pelos pacientes"],i:"Desacoplamento entre atividade sistêmica e queixa de olho seco/boca seca.",l:"—"},
+"Adição de tecido corneano em ectasia":{o:"Ceratoplastia por adição de tecido corneano (CTAK).",m:"Apresentação em congresso (Nova York).",r:["Alta satisfação em pacientes bem selecionados com ectasia"],i:"Alternativa aditiva para remodelar a córnea ectásica.",l:"Seleção do candidato é determinante."},
+"Brasil: Anvisa suspende colírios da Excelvision":{o:"Medida preventiva da Anvisa após alerta internacional.",m:"Suspensão por falhas de esterilização.",r:["Importação suspensa de todos os medicamentos da Excelvision","Proibidos venda, distribuição e uso de lotes de Hyabak e Thealoz Duo fabricados a partir de 5/6/2026"],i:"Lubrificantes muito prescritos — verificar lotes e orientar substituição.",l:"—"},
+"TearCare ganha código de insumo no CMS":{o:"SmartLids do sistema TearCare (Sight Sciences).",m:"Decisão do CMS (EUA).",r:["Código SD397 com valor de US$ 1.000 a partir de 1/1/2027","Sem taxa de pagamento separada"],i:"Facilita a cobertura do tratamento térmico da disfunção meibomiana.",l:"—"},
+"LB001 (TSG-6) para olho seco conclui pré-clínico":{o:"Colírio de TSG-6 (Link Biologics).",m:"Programa pré-clínico para IND.",r:["IND previsto para o 1º trimestre de 2027"],i:"—",l:"Pré-clínico."},
+"Treyegen para conjuntivite infecciosa entra em fase 1/2":{o:"Combinação de ranpirnase, tobramicina e oximetazolina (Okogen).",m:"Fase 1/2 EMERALD.",r:["1º paciente dosado na Índia"],i:"Tentativa de cobrir causas virais e bacterianas num único colírio.",l:"Fase inicial."},
+"Adultos com estrabismo têm dificuldade de conseguir consulta":{o:"Estudo de acesso publicado na JAMA Ophthalmology (2026).",m:"«Cliente oculto»: ligações padronizadas a 1.060 serviços de oftalmopediatria nos EUA, simulando agendamento de adulto com estrabismo em diferentes cenários de seguro.",r:["Apenas 23,8% ofereceram consulta em pelo menos um cenário","Diferenças por tipo de serviço, seguro e nível socioeconômico do condado"],i:"Estrabismo do adulto impacta qualidade de vida (diplopia, astenopia, efeito psicossocial) e é subatendido.",l:"Realidade americana; acesso ao agendamento, não ao tratamento."},
+"Fotorrastreador por birrefringência perde para autorrefrator":{o:"Comparação de dois tipos de rastreamento visual infantil (JAMA Ophthalmology).",m:"Estudo prospectivo, randomizado e mascarado de acurácia diagnóstica com crianças ≤18 anos encaminhadas à UCSF (jan/2024–fev/2025).",r:["Prevalência na amostra: ambliopia 15,1%, estrabismo 32,4%, erro refrativo significativo 30,1%","Autorrefrator teve maior sensibilidade para ambliopia e erro refrativo","Sem diferença significativa para estrabismo nem em especificidade"],i:"A promessa de detectar ambliopia «diretamente» não se confirmou em sensibilidade.",l:"Centro único, amostra encaminhada (alta prevalência)."},
+"Terapia binocular Luminopia: dados de registro":{o:"Terapia binocular digital para ambliopia.",m:"Análises do registro PUPiL e de dados de mundo real.",r:["AV melhorou em todos os grupos","Estereoacuidade basal foi o principal preditor de melhora","Crianças com ~30 meses de tratamento convencional prévio ainda ganharam visão, mantida no seguimento"],i:"Opção para quem estabilizou com oclusão/atropina.",l:"Dados de registro, não randomizados."},
+"Brasil: CBO e SBOP lançam cartilha sobre telas e miopia":{o:"Cartilha «Mais Tempo ao Ar Livre, Mais Saúde para os Olhos».",m:"Lançada no Congresso CBO 2026 durante o Projeto Pequenos Olhares.",r:["Público: pacientes, famílias, profissionais de saúde e educação","Projeto atendeu cerca de 1 mil crianças e adolescentes"],i:"Tempo ao ar livre é a medida preventiva mais simples contra miopia.",l:"—"},
+"Luma: eye-tracking para avaliação oculomotora e binocular":{o:"Sistema da Hundred Vision.",m:"Lançamento comercial.",r:["11 testes de rastreamento ocular em 5 domínios","Medida objetiva; não faz diagnóstico"],i:"Pode objetivar avaliação de motilidade e binocularidade.",l:"Validação clínica ainda limitada."},
+"Lentes DOT para controle de miopia: novos dados":{o:"Lentes de óculos com tecnologia de difusão óptica (SightGlass Vision).",m:"Três conjuntos de dados apresentados na American Academy of Optometry.",r:["Dados adicionais sobre controle da progressão da miopia infantil"],i:"Alternativa óptica à atropina.",l:"Detalhes numéricos não divulgados na fonte."},
+"Cenegermina entra em fase 3 para NAION":{o:"Cenegermina-bkbj (Dompé), fator de crescimento neural recombinante.",m:"Fase 3 Galassia-NAION-301.",r:["1º paciente incluído"],i:"NAION não tem tratamento eficaz comprovado; neuroproteção é a grande lacuna.",l:"Estudo em andamento."},
+"Satralizumabe com revisão prioritária para MOGAD":{o:"Satralizumabe (Enspryng, Genentech/Roche), anti-receptor de IL-6.",m:"Pedido suplementar de licença.",r:["Revisão prioritária concedida para doença associada ao anti-MOG"],i:"Seria a primeira terapia aprovada para MOGAD.",l:"—"},
+"Atrofia óptica dominante: antissenso para elevar OPA1":{o:"STK-002 (Stoke Therapeutics), oligonucleotídeo antissenso da plataforma TANGO.",m:"Estudo OSPREY, primeiro em humanos.",r:["Dados das primeiras coortes de escalonamento de dose apresentados","Coortes posteriores no 1º semestre de 2027"],i:"ADOA é a neuropatia óptica hereditária mais comum; aumentar OPA1 ataca a haploinsuficiência.",l:"Fase 1."},
+"Assistente de IA para óculos de baixa visão":{o:"Eva, assistente de IA da Eyedaptic para os óculos EYE7.",m:"Lançamento comercial.",r:["Ajusta configurações de visão por conversa","Empresa relata >99% de acurácia de leitura em testes internos"],i:"Reabilitação visual com interface por voz.",l:"Dados internos da empresa."},
+"Elegrobart SC (REVEAL-1): proptose responde com poucas doses":{o:"Elegrobart (Viridian), anticorpo anti-IGF-1R de meia-vida estendida, subcutâneo.",m:"Fase 3 em TED ativa: 132 pacientes randomizados 1:1:1 para a cada 4 semanas, a cada 8 semanas ou placebo.",r:["Respondedores de proptose na semana 24: 54% (4/4 sem) e 63% (8/8 sem) vs 18% (p<0,0001)","Resolução completa da diplopia: 51% vs 16% (braço 4/4 sem)","Zumbido: 11,3% e 2,3% ajustado por placebo, sem perda auditiva"],i:"Potencial 1º autoinjetor para TED, aplicado em casa (vs 8 infusões IV do teprotumumabe).",l:"REVEAL-2 (TED crônica) completa o pacote; BLA no 1º trimestre de 2027."},
+"Como o teprotumumabe reduz a proptose: multiômica da órbita":{o:"Pesquisa da UC San Diego.",m:"Multiômica de núcleo único em tecido orbitário de TED ativa, crônica, reativada e tratada com Tepezza, comparado a controles.",r:["Mapeamento das vias celulares da TED e de como o teprotumumabe reduz a proptose"],i:"Base biológica para escolher alvos e prever resposta.",l:"Estudo translacional."},
+"Linsitinibe oral entra em fase 3 para TED":{o:"Linsitinibe (Sling Therapeutics), inibidor oral de IGF-1R.",m:"Fase 3 global ORBIT em TED ativa moderada a grave.",r:["Primeiros pacientes dosados"],i:"Seria a primeira opção oral da classe.",l:"Estudo em andamento."},
+"Tepezza subcutâneo em fase 3":{o:"Teprotumumabe em injetor corporal subcutâneo (Amgen/Horizon).",m:"Fase 3.",r:["Resultados iniciais positivos divulgados em abril de 2026"],i:"Resposta da Amgen à concorrência SC.",l:"—"},
+"Catarata no olho uveítico: como evitar complicações":{o:"Palestra de Anjum F. Koreishi na AAO 2026.",m:"Revisão de estratégias.",r:["Foco na prevenção de complicações pós-facectomia em uveíte"],i:"Inflamação pós-operatória e EMC são as principais ameaças ao resultado.",l:"—"},
+"Artrite reumatoide e o olho":{o:"Revisão clínica (Healio).",m:"—",r:["Estruturas mais acometidas: superfície ocular, esclera e trato uveal"],i:"Esclerite necrosante na AR sinaliza vasculite sistêmica e maior mortalidade.",l:"—"},
+"ILUVIEN em uveíte posterior: fase 4":{o:"Implante intravítreo de fluocinolona 0,19 mg (ANI Pharmaceuticals).",m:"Estudo de fase 4 SYNCHRONICITY em uveíte posterior não infecciosa crônica.",r:["Apresentado como late-breaker na AAO 2026"],i:"Controle prolongado com implante único.",l:"Números não divulgados na fonte."},
+"Prism Vision adquire Spectrum Vision Partners":{o:"Consolidação de redes de oftalmologia nos EUA.",m:"Aquisição.",r:["+58 unidades de oftalmologia e 5 centros cirúrgicos ambulatoriais em cinco estados","Valores não divulgados"],i:"Tendência de consolidação com capital privado.",l:"—"},
+"HarrowRx: prescrição integrada ao prontuário":{o:"Plataforma da Harrow operada pela PhilRx.",m:"Lançamento.",r:["Prescrição dos produtos de marca da Harrow dentro do prontuário eletrônico"],i:"—",l:"—"},
+"Zeiss expande modelo Aloka Vision":{o:"Compromisso anunciado no IAPB.",m:"—",r:["Levar o modelo a pelo menos mais dois países até 2028","Cada iniciativa mira 1 milhão de pessoas a mais por ano"],i:"—",l:"—"},
+"Zeiss Clinic 360 liberado":{o:"Software em nuvem da Carl Zeiss Meditec.",m:"510(k) do FDA.",r:["Integra dados DICOM do OCT CIRRUS, do retinógrafo CLARUS e do campímetro Humphrey","Visão unificada de exames e prontuário"],i:"Interoperabilidade entre aparelhos é hoje um dos maiores gargalos do consultório.",l:"—"},
+"iPredict-DR: nova IA para retinopatia diabética":{o:"Software da iHealthScreen.",m:"510(k).",r:["Triagem de RD mais que leve em adultos com diabetes"],i:"Mais um player em IA de triagem.",l:"—"},
+"Moorfields tem nova presidente do conselho":{o:"Moorfields Eye Hospital (Londres).",m:"—",r:["Aruna Mehta assumiu em 1º de novembro, sucedendo o presidente interino Tim Briggs"],i:"—",l:"—"}
+};
+
+/* EXPLICAÇÕES DIDÁTICAS («Entenda») — chave = título exato */
+const EXPL = {
+"Nobel de Medicina 2026 premia a optogenética":"Na retinose pigmentar os fotorreceptores morrem, mas células bipolares e ganglionares sobrevivem por anos. Um vetor viral faz essas células produzirem uma opsina; elas passam a responder à luz e viram uma nova «camada fotossensível». Algumas plataformas precisam de óculos que intensificam a luz; a opsina da Nanoscope foi desenhada para funcionar com luz ambiente. A visão obtida é de baixa resolução, mas pode devolver orientação e percepção de objetos.",
+"AAO 2026 (Nova Orleans): os grandes temas":"A AAO é o principal termômetro do que chega à prática nos EUA e, depois, ao Brasil. Neste ano, o eixo comum foi reduzir a carga de tratamento: anti-VEGF com intervalos de 6 meses ou mais, implantes de liberação prolongada, terapias gênicas de dose única e dispositivos que diminuem a dependência de colírios no glaucoma.",
+"Fila de transplante de córnea no Brasil cresce 24% em seis meses":"O gargalo é a oferta de tecido. Técnicas lamelares (DALK, DMEK/DSAEK) usam melhor cada córnea e têm menos rejeição; terapias de células endoteliais cultivadas podem, no futuro, permitir que uma única córnea doadora trate vários pacientes.",
+"CFM reforça refração e diagnóstico de miopia como ato médico":"A ADPF 131 é a ação no STF que discute os limites de atuação de optometristas. Para o CFM e o CBO, prescrever lentes envolve diagnóstico — a refração é também a porta de entrada para detectar ambliopia, glaucoma, retinopatias e doenças sistêmicas.",
+"DAYBREAK: tarcocimab não inferior ao aflibercepte, com metade dos pacientes em 6/6 meses":"O tarcocimab é um anticorpo anti-VEGF ligado a um biopolímero, o que aumenta o tamanho da molécula e o tempo que ela permanece no vítreo. «Não inferior» significa que o ganho de visão ficou dentro da margem pré-definida em relação ao aflibercepte — não que seja melhor. O diferencial é a durabilidade: metade dos pacientes já estava em injeção semestral no 1º ano, enquanto o controle recebia a cada 8 semanas. O tabirafusp acrescenta bloqueio de IL-6, citocina ligada a edema crônico e resposta incompleta ao anti-VEGF.",
+"SOL-1: implante de axitinibe supera aflibercepte em dose única":"Inibidores de tirosina-quinase bloqueiam o receptor de VEGF por dentro da célula (VEGFR-1, -2 e -3), em vez de sequestrar o VEGF como os anticorpos. O hidrogel se dissolve sozinho à medida que libera o fármaco. O desenho foi exigente: pacientes que já haviam respondido a 2 injeções receberam uma única dose de cada braço, e o desfecho foi quem perdeu visão sem retratamento — ou seja, testa diretamente a durabilidade de uma aplicação.",
+"Duravyu (vorolanibe) falha desfecho primário no LUGANO":"O vorolanibe também é um inibidor de tirosina-quinase, em inserto de liberação prolongada. O contraste com o SOL-1 mostra que eficácia depende da molécula, da cinética de liberação e do desenho do estudo — não basta pertencer à mesma classe.",
+"MOGENRY: 4 anos de durabilidade e PDUFA no 1º semestre de 2027":"Diferente do voretigene (Luxturna), que repõe o gene RPE65 e exige fotorreceptores vivos e cirurgia sub-retiniana, a optogenética atua depois que os fotorreceptores já morreram: torna fotossensíveis as células da retina interna. Por isso serve para qualquer mutação e é aplicada por injeção intravítrea simples.",
+"Atrofia geográfica: novas métricas e o inibidor de inflamassoma K8":"Os inibidores de complemento aprovados nos EUA (pegcetacoplan e avacincaptad pegol) reduzem de forma modesta a velocidade de crescimento da área atrófica, sem ganho funcional claro nos estudos pivotais. Medir o avanço da borda em direção à fóvea capta melhor o que ameaça a visão central. A linha de pesquisa de Ambati liga o acúmulo de RNA Alu no EPR à ativação do inflamassoma NLRP3 e à morte dessas células — um alvo diferente do complemento.",
+"FDA aprova Lucamzi, biossimilar de ranibizumabe":"Biossimilar é um biológico altamente semelhante ao de referência, sem diferença clinicamente relevante em eficácia e segurança, aprovado por comparação analítica e estudo clínico de equivalência. O efeito prático esperado é a queda de preço do anti-VEGF.",
+"Lytenava: primeiro bevacizumabe oftálmico aprovado pelo FDA":"O bevacizumabe usado em retina vinha do frasco oncológico, fracionado em farmácias de manipulação — com variação de dose e risco de contaminação. O Lytenava não é biossimilar: é bevacizumabe formulado para uso intravítreo e aprovado com estudos próprios.",
+"Brasil: Anvisa ainda sem medicamento registrado para atrofia geográfica":"O eculizumabe bloqueia o C5, mais adiante na cascata do complemento — mecanismo semelhante ao do avacincaptad pegol. Sem registro na Anvisa, o acesso a inibidores de complemento para AG depende de importação excepcional e, muitas vezes, de ação judicial.",
+"Facectomia como 1ª cirurgia no ângulo fechado chega a 48,4%":"No fechamento angular primário, o cristalino contribui para o bloqueio pupilar e empurra o diafragma iridocristaliniano para a frente. O EAGLE (Lancet, 2016) randomizou pacientes ≥50 anos com GPAF ou FAP com PIO ≥30 mmHg para extração do cristalino transparente ou iridotomia: a facectomia deu melhor PIO, menos colírios, melhor qualidade de vida e foi custo-efetiva.",
+"K-911 (bimatoprosta grenod): PDUFA em 30/04/2027":"O óxido nítrico relaxa as células da malha trabecular e do canal de Schlemm (via GMPc), aumentando o escoamento convencional — mesmo princípio do latanoprosteno bunod. As prostaglandinas aumentam o escoamento uveoescleral remodelando a matriz do músculo ciliar. Uma molécula, duas vias.",
+"FDA libera OMNI Ultra (Sight Sciences)":"A canaloplastia viscodilata 360° do canal de Schlemm e dos coletores; a trabeculotomia abre a malha trabecular, principal ponto de resistência. Combinar as duas ataca a resistência em vários níveis da via convencional, sem deixar implante no olho.",
+"iDose TR pode ser reaplicado":"O iDose é um implante de titânio ancorado na malha trabecular que libera travoprosta continuamente, contornando a baixa adesão a colírios. Antes a bula previa aplicação única; agora o implante esgotado pode ser substituído.",
+"TECNIS PureSee chega ao mercado americano":"EDOF puramente refrativa altera o perfil de poder da óptica, sem anéis difrativos, por isso dispersa menos luz: menos halos e contraste preservado, ao custo de visão de perto limitada. Perfil ideal: quem dirige à noite e aceita óculos para leitura fina.",
+"Fentolamina (Ryzumvi) ganha indicação para presbiopia":"A fentolamina é antagonista α-adrenérgico: relaxa o músculo dilatador e causa miose discreta, aumentando a profundidade de foco (efeito pinhole). Mióticos colinérgicos (pilocarpina, aceclidina, carbacol) contraem o esfíncter e, em graus variados, o músculo ciliar — o que explica cefaleia, miopização e o raro risco de descolamento de retina.",
+"Epioxa (epi-on): resultados sustentados em 3 anos":"No protocolo de Dresden (epi-off) o epitélio é removido para a riboflavina penetrar, o que traz dor, risco de infecção e haze. O epi-on depende de uma formulação que atravessa o epitélio e de oxigênio suplementar — o O2 é consumido na reação de cross-linking. Kmax caindo 1,9 D significa aplanamento, não apenas estabilização.",
+"Brasil: Anvisa suspende colírios da Excelvision":"Hyabak (hialuronato sem conservante) e Thealoz Duo (trealose + hialuronato) são lubrificantes muito usados no Brasil. Na prática: conferir o lote com o paciente, substituir por outro lubrificante e notificar eventos adversos suspeitos no Notivisa.",
+"Derivado de membrana amniótica em olho seco: fase 2":"A membrana amniótica tem efeito anti-inflamatório e antifibrótico, atribuído em parte ao complexo HC-HA/PTX3. Levar isso a um colírio evitaria a aplicação de membrana com lente ou anel.",
+"Terapias celulares para edema corneano avançam":"A ideia é cultivar células endoteliais de um doador e injetá-las na câmara anterior, de modo que uma córnea possa tratar muitos pacientes. O conceito foi demonstrado no Japão (grupo de Kinoshita) com células cultivadas associadas a inibidor de ROCK.",
+"Ianalumabe na síndrome de Sjögren (NEJM)":"O ianalumabe bloqueia o receptor de BAFF e depleta linfócitos B. O estudo mostra uma dissociação comum em Sjögren: melhora objetiva da doença sistêmica sem melhora proporcional do olho seco e da boca seca — que dependem de dano glandular acumulado.",
+"Adultos com estrabismo têm dificuldade de conseguir consulta":"Cirurgia de estrabismo no adulto não é só estética: pode eliminar diplopia, restaurar fusão, ampliar o campo binocular (na esotropia) e melhorar a função psicossocial. Mesmo desvios antigos costumam ter bom resultado de alinhamento.",
+"Fotorrastreador por birrefringência perde para autorrefrator":"A birrefringência retiniana detecta se as duas fóveas fixam ao mesmo tempo (as fibras de Henle ao redor da fóvea são birrefringentes), o que em teoria identifica estrabismo e ambliopia. Fotorrastreadores e autorrefratores detectam fatores de risco ambliogênicos (anisometropia, alta ametropia), não a ambliopia em si.",
+"Terapia binocular Luminopia: dados de registro":"O Luminopia exibe vídeos em óculos de realidade virtual com imagens diferentes para cada olho, obrigando o uso do olho amblíope em visão binocular. Foi aprovado pelo FDA em 2021 para crianças de 4 a 7 anos.",
+"Cenegermina entra em fase 3 para NAION":"O NGF recombinante já é aprovado (Oxervate) para ceratite neurotrófica. Na NAION o racional é neuroproteção das células ganglionares após o insulto isquêmico ao disco.",
+"Satralizumabe com revisão prioritária para MOGAD":"O satralizumabe já é aprovado para NMOSD com anti-AQP4. A MOGAD é uma entidade distinta, que recorre com frequência e hoje é tratada off-label (corticoide, imunoglobulina, rituximabe, tocilizumabe).",
+"Atrofia óptica dominante: antissenso para elevar OPA1":"ADOA: mutação em OPA1 com haploinsuficiência. Causa perda bilateral de células ganglionares, palidez temporal do disco, discromatopsia azul-amarelo (tritan) e início na infância. A plataforma TANGO aumenta a produção da proteína a partir do alelo normal.",
+"Elegrobart SC (REVEAL-1): proptose responde com poucas doses":"Nos fibroblastos orbitários, o IGF-1R forma complexo com o receptor de TSH; bloqueá-lo reduz a expansão de gordura e músculo. O teprotumumabe exige 8 infusões IV a cada 3 semanas; uma opção SC espaçada muda a logística do tratamento.",
+"Linsitinibe oral entra em fase 3 para TED":"É uma pequena molécula que inibe o IGF-1R por via oral. Se funcionar, dispensa infusão e injeção — mas exige atenção à seletividade, já que o receptor de insulina é estruturalmente parecido.",
+"Catarata no olho uveítico: como evitar complicações":"Complicações típicas: inflamação rebote, edema macular cistoide, sinéquias, membrana pupilar, opacificação capsular e hipotonia. Estratégia: quiescência mantida antes, profilaxia anti-inflamatória perioperatória e seguimento estreito do EMC com OCT.",
+"Artrite reumatoide e o olho":"Ceratoconjuntivite seca é a manifestação mais comum. Esclerite e ceratite ulcerativa periférica indicam doença sistêmica ativa e exigem imunossupressão sistêmica, com articulação com a reumatologia."
+};
+
+
+Object.assign(BRIEFS,{
+"Zeiss PT Lunana: primeira LIO fácica da Zeiss aprovada na China":{o:"Lente intraocular fácica (implantada sem remover o cristalino) da Carl Zeiss Meditec.",m:"Aprovação da NMPA (agência chinesa).",r:["Primeira LIO fácica do portfólio Zeiss","Comercialização prevista para 2027"],i:"Novo concorrente num segmento dominado pela ICL, em um dos maiores mercados de alta miopia do mundo.",l:"Ainda sem aprovação nos EUA, Europa ou Brasil anunciada."},
+"RayOne Galaxy: 1ª LIO em espiral aprovada nos EUA":{o:"Plataforma pré-carregada (material Rayacryl) com óptica refrativa em espiral. O FDA a classifica como multifocal (trifocal), com adições de +1,5 D e +3,0 D no plano da LIO.",m:"Estudo IDE com mais de 250 pacientes em 10 centros dos EUA, comparado a monofocal. Aprovação do FDA em 24/09/2026 (Galaxy e Galaxy Toric).",r:["Faixa contínua de visão de +0,5 a −2,5 D","AV binocular ≥0,2 logMAR ao longo de ~4,0 D de desfoco","Indicação: astigmatismo corneano <1,0 D; versão tórica para os demais","Já aprovada em ~75 países, com mais de 200 mil implantes"],i:"Promete faixa de trifocal com perfil de halos mais próximo de monofocal e 0% de perda de luz transmitida.",l:"Parte dos dados comparativos de halos vem da empresa."},
+"J&J lança SmartLOAD e soma 1 milhão de PureSee/Odyssey implantadas":{o:"Programa da Johnson & Johnson na AAO 2026 em três frentes: dados de contraste, marco de implantes e novo sistema de inserção.",m:"Lançamento comercial e apresentações científicas.",r:["SmartLOAD: primeiro sistema a combinar injetor de titânio reutilizável com cartucho descartável pré-carregado (lançado com a Tecnis Eyhance)","PureSee + Odyssey: mais de 1 milhão de implantes no mundo","Peça de mão Ellips FX com conector Luer com trava para a irrigação"],i:"A J&J defende que contraste — não só acuidade — deve orientar a escolha de LIO premium.",l:"—"},
+"Alcon lança Clareon TruPlus monofocal e tórica":{o:"Nova geração de LIO monofocal e tórica da Alcon.",m:"Lançamento nos EUA no ASCRS 2026.",r:["Monofocal e tórica com desenho aprimorado na plataforma Clareon"],i:"Atualização da linha de entrada da Alcon.",l:"Detalhes ópticos não divulgados na fonte."},
+"Acuvue Oasys Max 2-Week recebe marca CE":{o:"Lente de contato reutilizável de troca quinzenal da J&J.",m:"Certificação CE.",r:["Tecnologias TearStable (hidratação) e OptiBlue (filtra 60% da luz azul-violeta)","Lançamento em mercados europeus selecionados a partir do fim de 2026; expansão em 2027–2028"],i:"Leva a tecnologia da linha diária Max para o formato reutilizável, mais barato.",l:"—"},
+"TOTAL30 Multifocal for Astigmatism chega aos EUA":{o:"Lente mensal multifocal tórica da Alcon.",m:"Lançamento comercial nos EUA.",r:["Única multifocal tórica mensal com tecnologia de gradiente de água"],i:"Presbita astigmata tem poucas opções de LC.",l:"—"},
+"Primeira diária multifocal tórica chega ao Reino Unido":{o:"Acuvue Oasys Max 1-Day Multifocal for Astigmatism (J&J).",m:"Lançamento no Reino Unido e Irlanda.",r:["Descrita como a primeira diária multifocal tórica nesses mercados","Completa a família diária para astigmatas (tórica e multifocal tórica)"],i:"Preenche lacuna antiga no presbita com astigmatismo.",l:"—"},
+"Precision7: Alcon cria a lente de troca semanal":{o:"Lente de contato de troca semanal da Alcon (tecnologia Activ-Flo).",m:"Lançamento no Canadá (fev/2026) e Reino Unido/Irlanda (mar/2026).",r:["Nova categoria entre diárias e quinzenais/mensais"],i:"Troca semanal facilita adesão ao cronograma e reduz o tempo de uso de cada lente.",l:"—"},
+"MyDay MiSight 1 Day: controle de miopia em silicone-hidrogel":{o:"Lente diária de controle de miopia da CooperVision.",m:"Lançamento comercial.",r:["Desenho MiSight em silicone-hidrogel MyDay","Mesma faixa de poder do MiSight 1 Day original"],i:"Mais oxigenação para crianças que usam a lente muitas horas.",l:"—"},
+"Deseyne: 1ª lente de contato EDOF para presbiopia liberada pelo FDA":{o:"Deseyne (vifilcon C), diária hidrofílica da Cataltheia / Bruno Vision Care.",m:"Clearance do FDA com base em estudo clínico.",r:["Visão contínua de perto, intermediária e longe com uma zona óptica esférica","Nenhum evento adverso no estudo clínico","Material com ácido hialurônico e polissacarídeo de semente de tamarindo","Mais de 10 anos de uso na Europa sob a marca Safilens"],i:"Alternativa às multifocais com adaptação mais rápida.",l:"Comparações diretas com multifocais não divulgadas."},
+"Heidelberg Opera: microscópio cirúrgico 100% digital nos EUA":{o:"Plataforma digital de visualização cirúrgica da Heidelberg Engineering.",m:"Disponível comercialmente nos EUA; wet lab na AAO 2026.",r:["Imagem em telas grandes com alta cor, contraste e resolução","Realce de imagem para detalhes anatômicos"],i:"Cirurgia «heads-up» melhora ergonomia e permite sobrepor dados.",l:"—"},
+"Zeiss leva a plataforma EVA NEXUS para a catarata":{o:"Sistema de faco da Zeiss baseado no EVA NEXUS da DORC.",m:"Lançamento com implantação em fases.",r:["Peça de mão compacta EVA SURE TOUCH","Predefinições por grau de catarata, ajustáveis pelo pedal ou pela tela","Integra o fluxo «ZEISS Cataract Workflow»"],i:"Concorre com Centurion (Alcon) e Veritas (J&J).",l:"—"},
+"Alcon UNITY CS: faco com estimativa de temperatura na incisão":{o:"Console standalone de catarata da plataforma UNITY.",m:"Lançamento no Canadá (COS, junho/2026) e Ásia-Pacífico.",r:["Peça de mão inédita que estima a temperatura na incisão","UNITY VCS: vitrectomia + faco num só console"],i:"Segurança térmica e integração retina–catarata.",l:"—"},
+"Spectralis ganha OCTA de 250 kHz":{o:"Nova versão de software do Spectralis (Heidelberg).",m:"Liberação do FDA em 2026.",r:["OCTA a 250 kHz — a mais rápida já disponível na plataforma","Melhorias de rastreamento ocular e velocidade"],i:"Menos artefato de movimento e exames mais rápidos.",l:"—"},
+"Pentacam Cornea OCT liberado pelo FDA":{o:"Aparelho da Oculus que une Scheimpflug e OCT corneano.",m:"510(k) do FDA; estreia no ASCRS 2026.",r:["Medida única de 1 segundo","OCT de domínio espectral com varredura pericêntrica e resolução de 1,9 µm","Mapa de espessura epitelial e densitometria"],i:"Topografia, tomografia e epitélio no mesmo exame.",l:"—"},
+"Brytly: apraclonidina de venda livre para olho vermelho":{o:"Apraclonidina 0,125% (Alcon), sem receita.",m:"Aprovação do FDA.",r:["Início de ação em 1 minuto; até 12 horas","A partir de 12 anos; no máximo 2 vezes ao dia","Retirar LC antes e esperar 10 minutos para recolocar; 5 minutos entre colírios"],i:"Segue a lógica da brimonidina em baixa dose: agonista α2 para clarear o olho.",l:"Uso cosmético; não trata a causa da hiperemia."},
+"Reproxalap: 3ª recusa do FDA e recurso formal":{o:"Reproxalap (Aldeyra), modulador de espécies reativas de aldeído (RASP).",m:"NDA baseado em estudos em câmara de olho seco e estudos de campo.",r:["3ª CRL (16/03/2026): falta de evidência substancial de eficácia em sinais e sintomas","Sem problemas de segurança ou fabricação apontados","Empresa diz ter 9 estudos adequados e não planeja novos ensaios","Pedido formal de resolução de disputa no 4º tri de 2026"],i:"Mostra o rigor do FDA em olho seco.",l:"—"},
+"SUS: regra para frascos de colírio midriático nas unidades móveis":{o:"Nota Técnica 3 da Agência Brasileira de Apoio à Gestão do SUS (AgSUS).",m:"Recomendação obrigatória de gestão de risco sanitário.",r:["Anotar a data de abertura no frasco","Registrar o profissional e a data de uso em planilha","Armazenar frascos abertos conforme o fabricante","Critérios restritivos de uso para tropicamida, fenilefrina e ciclopentolato"],i:"Prevenção de endoftalmite e ceratite em mutirões de catarata.",l:"—"},
+"Colírio Lerin deve voltar ao mercado brasileiro":{o:"Colírio que havia saído de linha na Allergan.",m:"Plano comercial da Pharlab.",r:["Relançamento previsto para 2026"],i:"—",l:"Data exata não divulgada."}
+});
+Object.assign(EXPL,{
+"RayOne Galaxy: 1ª LIO em espiral aprovada nos EUA":"LIOs difrativas criam focos com degraus/anéis na superfície — parte da luz se perde e surgem halos. A espiral muda a curvatura de forma contínua ao redor do eixo óptico, distribuindo o foco sem degraus. A promessa é perfil de halos mais próximo de uma monofocal, com faixa de visão de trifocal.",
+"Deseyne: 1ª lente de contato EDOF para presbiopia liberada pelo FDA":"Multifocais de LC usam zonas concêntricas (centro-perto ou centro-longe), que exigem neuroadaptação e reduzem contraste. EDOF alonga o foco com uma única zona — o mesmo princípio das LIOs EDOF.",
+"MyDay MiSight 1 Day: controle de miopia em silicone-hidrogel":"O MiSight usa desenho de foco duplo com zonas de tratamento que geram desfoco miópico na periferia da retina — sinal que freia o crescimento axial. O silicone-hidrogel aumenta a transmissibilidade de oxigênio.",
+"Alcon UNITY CS: faco com estimativa de temperatura na incisão":"A queimadura de incisão ocorre quando o calor do tip ultrassônico não é dissipado: fluxo baixo, núcleo duro, incisão apertada ou viscoelástico obstruindo. Estimar a temperatura em tempo real permite agir antes da lesão térmica.",
+"Pentacam Cornea OCT liberado pelo FDA":"O mapa epitelial ajuda no ceratocone frustro: o epitélio afina sobre o cone e espessa ao redor (padrão em «donut»), mascarando a topografia anterior. Ver o epitélio separado do estroma melhora a triagem pré-refrativa.",
+"Brytly: apraclonidina de venda livre para olho vermelho":"Vasoconstritores α1 clássicos (nafazolina, tetra-hidrozolina) causam hiperemia de rebote com uso frequente. Agonistas α2 em baixa dose, como a brimonidina 0,025%, contraem preferencialmente vênulas — por isso tendem a ter menos rebote.",
+"Reproxalap: 3ª recusa do FDA e recurso formal":"Aldeídos reativos (como o malondialdeído) aumentam com o estresse oxidativo e ativam vias inflamatórias na superfície ocular. O reproxalap os sequestra — mecanismo inédito no olho seco, mas que não convenceu o FDA de benefício consistente.",
+"SUS: regra para frascos de colírio midriático nas unidades móveis":"Em mutirões, o mesmo frasco passa por dezenas de pacientes; a ponta encosta em cílios e conjuntiva e o frasco vira reservatório de bactérias. Controle de data de abertura e descarte é a medida mais simples contra surtos infecciosos."
+});
+
+Object.assign(BRIEFS,{
+"Volk ClearField Pro: lente de BIO para exame e laser":{o:"Lente condensadora para oftalmoscopia binocular indireta da Volk Optical (grupo Halma).",m:"Lançamento comercial na AAO 2026.",r:["Une exame da retina e laser indireto numa só lente","Desenho para preservar detalhe e contraste nas duas situações"],i:"Evita trocar de lente entre o exame e o tratamento (ex.: rasgaduras periféricas, ROP).",l:"Especificações de dioptria, campo e magnificação não detalhadas na fonte."},
+"Eyesi Surgical 3.0: nova geração do simulador de cirurgia":{o:"Simulador de cirurgia oftalmológica em realidade virtual da Haag-Streit.",m:"Lançamento global na AAO 2026.",r:["3ª geração da plataforma Eyesi Surgical"],i:"Simulação reduz a curva de aprendizado e as complicações nos primeiros casos de faco e vitrectomia.",l:"Novidades técnicas não detalhadas na fonte."}
+});
+Object.assign(EXPL,{
+"Volk ClearField Pro: lente de BIO para exame e laser":"Na oftalmoscopia indireta, a lente condensadora forma uma imagem aérea real, invertida e revertida. A dioptria define o equilíbrio campo × magnificação: 20D é o padrão; 28D/30D dão campo maior e passam por pupila pequena; 14D–15D ampliam mais o polo posterior. Para laser indireto, revestimento e desenho asférico importam para entregar o feixe sem reflexos.",
+"Eyesi Surgical 3.0: nova geração do simulador de cirurgia":"Estudos com o Eyesi associam o treino em simulador a menos rupturas de cápsula posterior nos primeiros casos de residentes. Módulos típicos: capsulorrexe, hidrodissecção, faco com divide-and-conquer e manejo de complicações."
+});
+/* ========================= RENDER ========================= */
+const $ = s => document.querySelector(s);
+const fmt = d => { if(!d) return ""; const [y,m,dd]=d.split("-"); const M=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"]; if(!m) return y; if(!dd) return `${M[+m-1]} ${y}`; return `${+dd} ${M[+m-1]} ${y}`; };
+const CAL=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="vertical-align:-2px;margin-right:6px"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>`;
+const dateBadge = d => { if(!d) return ""; const [y,m,dd]=d.split("-"); const M=["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
+  const big = dd ? +dd : (m ? M[+m-1] : y); const small = dd ? `${M[+m-1]} ${y}` : (m ? y : "data exata n/d");
+  return `<div class="dbig${dd?"":" partial"}"><b>${big}</b><span>${small}</span></div>`; };
+const chipClass = t => ({"FDA":"fda","Brasil":"br","Fase 3":"f3","Aparelho":"dev","Colírio":"drop"}[t]||"");
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+let state = { tab: "noticias", q: "", tag: null };
+
+/* ========================= AO VIVO (robô de notícias) ========================= */
+const VAPID_PUBLIC_KEY = "BMvvOm7h8QY_6JdkKKINQU6peCKKsBJOAGGfKwG9Y9bUPu2r04ebYmhrAJy6NrEZdr2iCnC11uIW7EHy1LaT1zw";
+AREAS.splice(1,0,{ id:"aovivo", name:"Ao vivo", color:"#d9b400", desc:"Notícias e artigos que o robô busca a cada 2 horas — títulos no idioma original", articles:[], market:[] });
+let LIVE = { loaded:false, error:null, updated:null, items:[] };
+let liveArea = "todas";
+const store = { get(k){ try{ return localStorage.getItem(k); }catch(_){ return null; } }, set(k,v){ try{ localStorage.setItem(k,v); }catch(_){ } } };
+let lastSeen = store.get("ou_lastSeen") || "";
+
+function agoTxt(iso){ if(!iso) return "—"; const m=Math.round((Date.now()-new Date(iso))/60000); if(m<1) return "agora"; if(m<60) return `há ${m} min`; const h=Math.round(m/60); if(h<24) return `há ${h} h`; return `há ${Math.round(h/24)} d`; }
+function newCount(){ if(!lastSeen) return 0; return LIVE.items.filter(x=>x.added && x.added>lastSeen).length; }
+function paintTabBadge(){
+  const t=document.querySelector('.tab[data-id="aovivo"]'); if(!t) return;
+  let b=t.querySelector(".new"); const n=newCount();
+  if(n && state.tab!=="aovivo"){ if(!b){ b=document.createElement("span"); b.className="new"; t.appendChild(b);} b.textContent=n>99?"99+":n; } else if(b) b.remove();
+}
+async function loadLive(){
+  try{
+    const r=await fetch("feed.json?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok) throw new Error(r.status);
+    const j=await r.json(); LIVE={loaded:true,error:null,updated:j.updated,items:j.items||[]};
+  }catch(e){ LIVE.loaded=true; LIVE.error="offline"; }
+  if(!lastSeen){ lastSeen=LIVE.updated||new Date().toISOString(); store.set("ou_lastSeen",lastSeen); }
+  paintTabBadge();
+  if(state.tab==="aovivo") render();
+}
+
+/* ---- Notificações ---- */
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone===true;
+let pushState = { status:"checking", sub:null };
+function b64ToU8(b){ const p="=".repeat((4-b.length%4)%4); const s=atob((b+p).replace(/-/g,"+").replace(/_/g,"/")); return Uint8Array.from([...s].map(c=>c.charCodeAt(0))); }
+
+async function checkPush(){
+  if(location.protocol!=="https:" && location.hostname!=="localhost"){ pushState.status="nohost"; return; }
+  if(!("serviceWorker" in navigator)){ pushState.status="unsupported"; return; }
+  if(!("PushManager" in window) || !("Notification" in window)){ pushState.status = isIOS && !isStandalone() ? "ios-install" : "unsupported"; return; }
+  if(Notification.permission==="denied"){ pushState.status="denied"; return; }
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    const sub=await reg.pushManager.getSubscription();
+    pushState = sub ? {status:"on",sub} : {status:"off",sub:null};
+  }catch(_){ pushState.status="off"; }
+}
+async function enablePush(){
+  try{
+    const perm=await Notification.requestPermission();
+    if(perm!=="granted"){ pushState.status = perm==="denied"?"denied":"off"; render(); return; }
+    const reg=await navigator.serviceWorker.ready;
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub) sub=await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:b64ToU8(VAPID_PUBLIC_KEY) });
+    pushState={status:"on",sub,justNow:true};
+    reg.showNotification("Oftalmo Update",{ body:"Avisos ativados neste aparelho ✔", icon:"icon-192.png", badge:"badge-96.png", tag:"ativado" });
+  }catch(e){ pushState.status="error"; pushState.err=String(e&&e.message||e); }
+  render();
+}
+async function copySub(){
+  const txt=JSON.stringify(pushState.sub);
+  try{ await navigator.clipboard.writeText(txt); const b=$("#copySub"); if(b){ b.textContent="Copiado ✔"; setTimeout(()=>{ b.textContent="Copiar código"; },2000);} }
+  catch(_){ const ta=$("#subcode"); if(ta){ ta.hidden=false; ta.select(); } }
+}
+function pushBox(){
+  const st=pushState.status;
+  const S=(cls,txt)=>`<span class="st ${cls}">${txt}</span>`;
+  if(st==="on"){
+    return `<section class="pushbox"><h3>🔔 Avisos ${S("ok","ativos")}</h3>
+      <p>${pushState.justNow?"Pronto! Agora falta só um passo (uma vez só):":"Este aparelho está inscrito. Se trocou de celular ou reinstalou o app, copie de novo o código abaixo."}</p>
+      ${pushState.justNow?`<ol class="steps"><li>Toque em <b>Copiar código</b>.</li><li>No GitHub: <b>Settings › Secrets and variables › Actions</b>, abra <b>PUSH_SUBSCRIPTION</b> e cole.</li><li>Em <b>Actions › Buscar notícias › Run workflow</b>, marque “teste” para receber um aviso agora.</li></ol>`:""}
+      <div style="margin-top:10px"><button class="pbtn gold" id="copySub">Copiar código</button><button class="pbtn ghost" id="showSub">Ver código</button></div>
+      <textarea class="subcode" id="subcode" readonly hidden>${esc(JSON.stringify(pushState.sub))}</textarea></section>`;
+  }
+  const msg={
+    checking:["…","Verificando…",""],
+    off:["warn","desligados","Toque para receber uma notificação sempre que o robô encontrar notícia nova."],
+    "ios-install":["warn","instale o app","No iPhone, os avisos só funcionam com o app na Tela de Início: toque em <b>Compartilhar</b> › <b>Adicionar à Tela de Início</b> e abra pelo ícone."],
+    denied:["warn","bloqueados","Você recusou a permissão. Libere em Ajustes do celular › Notificações › Oftalmo Update (ou nas permissões do site no Chrome)."],
+    unsupported:["warn","indisponível","Este navegador não aceita notificações. No Android use o Chrome; no iPhone, o Safari com o app na Tela de Início."],
+    nohost:["","prévia","Os avisos funcionam quando o app está publicado no seu GitHub Pages. Aqui é só uma prévia."],
+    error:["warn","erro",`Não consegui ativar: ${esc(pushState.err||"")}`]
+  }[st]||["","",""];
+  const btn = (st==="off"||st==="error") ? `<button class="pbtn gold" id="enablePush">Ativar avisos</button>` : "";
+  return `<section class="pushbox"><h3>🔔 Avisos ${S(msg[0],msg[1])}</h3><p>${msg[2]}</p>${btn}</section>`;
+}
+function liveCard(it){
+  const a=AREAS.find(z=>z.id===it.area)||AREAS[0];
+  const nv = lastSeen && it.added && it.added>lastSeen;
+  return `<article class="card lcard${nv?" isnew":""}" style="--ac:${a.color}">
+    <div class="chead">${dateBadge(it.d)}<div class="cright"><div class="meta">${nv?`<span class="chip nv">Nova</span>`:""}<span class="chip area" style="color:${a.color}">${esc(a.name)}</span><span class="chip src">${esc(it.src)}</span>${it.kind==="artigo"?`<span class="chip">Artigo</span>`:""}</div><h5>${esc(it.t)}</h5></div></div>
+    ${it.s?`<p>${esc(it.s)}</p>`:""}
+    <a class="lk" href="${esc(it.url)}" target="_blank" rel="noopener">Abrir na fonte ↗</a>
+  </article>`;
+}
+function renderLive(){
+  let html=pushBox();
+  if(!LIVE.loaded) return html+`<div class="empty">Carregando…</div>`;
+  if(LIVE.error && !LIVE.items.length) return html+`<div class="empty">Sem conexão com o feed. Quando o app estiver no GitHub Pages, as notícias do robô aparecem aqui.</div>`;
+  if(!LIVE.items.length) return html+`<div class="empty">O robô ainda não rodou. No GitHub, vá em Actions › Buscar notícias › Run workflow.</div>`;
+  const areas=[...new Set(LIVE.items.map(x=>x.area))];
+  const ord=AREAS.map(a=>a.id).filter(id=>areas.includes(id));
+  html+=`<div class="livemeta">Última busca: ${agoTxt(LIVE.updated)} · ${LIVE.items.length} itens</div>`;
+  html+=`<div class="toolbar"><input class="search" id="q" type="search" placeholder="Buscar (em inglês)…" value="${esc(state.q)}">
+    <button class="fbtn ${liveArea==="todas"?"on":""}" data-larea="todas">Todas</button>
+    <button class="fbtn ${liveArea==="noticia"?"on":""}" data-larea="noticia">Só notícias</button>
+    <button class="fbtn ${liveArea==="artigo"?"on":""}" data-larea="artigo">Só artigos</button>
+    ${ord.map(id=>{const a=AREAS.find(z=>z.id===id);return `<button class="fbtn ${liveArea===id?"on":""}" data-larea="${id}">${esc(a.name)}</button>`;}).join("")}</div>`;
+  const q=state.q.trim().toLowerCase();
+  const list=LIVE.items.filter(x=> (liveArea==="todas" || x.area===liveArea || x.kind===liveArea) && (!q || (x.t+" "+(x.s||"")+" "+x.src).toLowerCase().includes(q)) ).slice(0,150);
+  html+= list.length ? `<div class="section"><div class="grid">${list.map(liveCard).join("")}</div></div>` : `<div class="empty">Nada encontrado com esse filtro.</div>`;
+  return html;
+}
+function wireLive(){
+  const e=$("#enablePush"); if(e) e.addEventListener("click",enablePush);
+  const c=$("#copySub"); if(c) c.addEventListener("click",copySub);
+  const s=$("#showSub"); if(s) s.addEventListener("click",()=>{ const t=$("#subcode"); t.hidden=!t.hidden; if(!t.hidden) t.select(); });
+  document.querySelectorAll("[data-larea]").forEach(b=>b.addEventListener("click",()=>{ liveArea=b.dataset.larea; render(); }));
+}
+function markSeen(){ if(LIVE.updated){ setTimeout(()=>{ lastSeen=LIVE.updated; store.set("ou_lastSeen",lastSeen); },4000); } }
+
+
+function allMarket(){
+  const out=[];
+  AREAS.forEach(a=>{ if(["aparelhos","labs","lios"].includes(a.id)) return; (a.market||[]).forEach(it=>out.push({...it, area:a})); });
+  return out.sort((x,y)=>y.d.localeCompare(x.d));
+}
+function allArticles(){
+  const out=[];
+  AREAS.forEach(a=>{ if(["noticias","mercado","aparelhos","labs","lios"].includes(a.id)) return; (a.articles||[]).forEach(it=>out.push({...it, area:a})); });
+  return out.sort((x,y)=>y.d.localeCompare(x.d));
+}
+
+function detailHTML(it){
+  const b=BRIEFS[it.t]||{}; const e=EXPL[it.t];
+  const blk=(h,v)=> (v && v!=="—") ? `<div class="blk"><h6>${h}</h6><p>${v}</p></div>` : "";
+  const res=(b.r||[]).filter(x=>x&&x!=="—");
+  const src=(it.src||[]).map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ");
+  return `<div class="dtitle">Resumo detalhado</div>
+    ${e?`<div class="entenda"><h6>Entenda</h6><p>${e}</p></div>`:""}
+    ${blk("O que é",b.o)}${blk("Como foi feito",b.m)}
+    ${res.length?`<div class="blk"><h6>Resultados</h6><ul>${res.map(x=>`<li>${x}</li>`).join("")}</ul></div>`:""}
+    ${blk("Por que importa",b.i)}${blk("Limitações e próximos passos",b.l)}
+    ${src?`<div class="src">Fonte: ${src}</div>`:""}`;
+}
+function card(it, color, showArea){
+  const tags=(it.tags||[]).map(t=>`<span class="chip ${chipClass(t)}">${esc(t)}</span>`).join("");
+  const area= showArea&&it.area ? `<span class="chip area" style="color:${it.area.color}">${esc(it.area.name)}</span>` : "";
+  const src=(it.src||[]).map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ");
+  return `<article class="card" tabindex="0" role="button" data-brief="${esc(it.t)}" style="--ac:${showArea&&it.area?it.area.color:color}">
+    <div class="chead">${dateBadge(it.d)}<div class="cright"><div class="meta">${area}${tags}</div><h5>${esc(it.t)}</h5></div></div><p>${it.s}</p>
+    ${it.p?`<div class="pearl"><b>Pérola:</b> ${it.p}</div>`:""}
+    <div class="detail"><div class="detail-in">${detailHTML(it)}</div></div>
+    <div class="more"><span class="lbl">Ler resumo detalhado</span><span class="arr">▾</span></div>
+  </article>`;
+}
+
+function matches(it){
+  const q=state.q.trim().toLowerCase();
+  if(state.tag && !(it.tags||[]).includes(state.tag)) return false;
+  if(!q) return true;
+  return (it.t+" "+it.s+" "+(it.p||"")+" "+(it.tags||[]).join(" ")+" "+(it.area?it.area.name:"")).toLowerCase().includes(q);
+}
+
+function weeklyBox(a){
+  const w=a.weekly; if(!w) return "";
+  const src=(w.src||[]).map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ");
+  if(w.kind==="top3"){
+    return `<section class="weekly"><span class="flag">★ Novidade da semana</span>
+      <div class="date">${CAL}${esc(w.date)}</div><h3>${esc(w.title)}</h3>
+      <div class="top3">${w.items.map((x,i)=>`<button class="t" data-go="${x.go}"><span class="n">${i+1}</span><span><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span></button>`).join("")}</div>
+    </section>`;
+  }
+  return `<section class="weekly"><span class="flag">★ Novidade da semana</span>
+    <div class="date">${CAL}${esc(w.date)}</div><h3>${esc(w.title)}</h3>
+    ${w.body}${w.pearl?`<div class="pearl">${w.pearl}</div>`:""}
+    ${src?`<div class="src" style="font-size:12px;margin-top:8px">Fonte: ${src}</div>`:""}
+  </section>`;
+}
+
+function section(title, items, color, showArea){
+  const list=items.filter(matches).sort((x,y)=>(y.d||"").localeCompare(x.d||""));
+  if(!items.length) return "";
+  return `<div class="section"><h4>${title}</h4>${list.length?`<div class="grid">${list.map(it=>card(it,color,showArea)).join("")}</div>`:`<div class="empty">Nada encontrado com esse filtro.</div>`}</div>`;
+}
+
+function toolbar(items){
+  const tags=[...new Set(items.flatMap(i=>i.tags||[]))].sort();
+  return `<div class="toolbar"><input class="search" id="q" type="search" placeholder="Buscar nesta aba…" value="${esc(state.q)}">
+    <button class="fbtn ${state.tag?"":"on"}" data-tag="">Todos</button>
+    ${tags.map(t=>`<button class="fbtn ${state.tag===t?"on":""}" data-tag="${esc(t)}">${esc(t)}</button>`).join("")}</div>`;
+}
+
+function render(){
+  const a=AREAS.find(x=>x.id===state.tab)||AREAS[0];
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected", b.dataset.id===a.id));
+  let html=`<div class="area-head"><span class="bar" style="background:${a.color}"></span><div><h2>${esc(a.name)}</h2><p>${esc(a.desc)}</p></div></div>`;
+  html+=weeklyBox(a);
+
+  if(a.id==="aovivo"){
+    html+=renderLive();
+    $("#main").innerHTML=html;
+    const q=$("#q");
+    if(q){ q.addEventListener("input",e=>{ state.q=e.target.value; const pos=e.target.selectionStart; render(); const n=$("#q"); n.focus(); try{n.setSelectionRange(pos,pos);}catch(_){} }); }
+    wireLive(); paintTabBadge(); markSeen();
+    return;
+  }
+  if(a.id==="noticias"){
+    const latest=allArticles().slice(0,6);
+    html+=toolbar([...a.articles,...latest]);
+    html+=section("Manchetes & Brasil", a.articles, a.color, false);
+    html+=section("Últimos artigos de todas as áreas", latest, a.color, true);
+    html+=`<div class="section"><h4>Radar regulatório — próximas datas</h4><div class="radar">${a.radar.map(r=>`<div class="row"><div class="when">${esc(r[0])}</div><div class="what"><b>${esc(r[1])}</b><span>${esc(r[2])}</span></div></div>`).join("")}</div></div>`;
+  } else if(a.id==="aparelhos" || a.id==="labs" || a.id==="lios"){
+    const own=a.articles.map(x=>({...x}));
+    const pick = it => a.id==="lios" ? !!it.iol : a.id==="aparelhos" ? ((it.tags||[]).includes("Aparelho") && !it.iol) : !!it.lab;
+    const fromAreas=[];
+    AREAS.forEach(z=>{ if(["noticias","aparelhos","labs","lios"].includes(z.id)) return; [...(z.articles||[]),...(z.market||[])].forEach(it=>{ if(pick(it)) fromAreas.push({...it, area:z}); }); });
+    html+=toolbar([...own,...fromAreas]);
+    a.subs.forEach(sb=>{ html+=section(sb, own.filter(x=>x.sub===sb), a.color, false); });
+    html+=section({lios:"LIOs citadas nas subespecialidades",aparelhos:"Aparelhos citados nas subespecialidades",labs:"Fármacos, implantes e pipeline nas subespecialidades"}[a.id], fromAreas, a.color, true);
+  } else if(a.id==="mercado"){
+    const all=[...a.market.map(x=>({...x,area:a})), ...allMarket().filter(x=>x.area.id!=="mercado")].sort((x,y)=>y.d.localeCompare(x.d));
+    html+=toolbar(all);
+    html+=section("Negócios e movimentos de empresas — todas as áreas", all, a.color, true);
+  } else {
+    html+=toolbar([...a.articles,...a.market]);
+    html+=section("Artigos & ensaios clínicos", a.articles, a.color, false);
+    html+=section("Mercado: laboratórios & aparelhos", a.market, a.color, false);
+  }
+  $("#main").innerHTML=html;
+
+  const q=$("#q");
+  if(q){ q.addEventListener("input",e=>{ state.q=e.target.value; const pos=e.target.selectionStart; render(); const n=$("#q"); n.focus(); try{n.setSelectionRange(pos,pos);}catch(_){} }); }
+  document.querySelectorAll(".fbtn").forEach(b=>b.addEventListener("click",()=>{ state.tag=b.dataset.tag||null; render(); }));
+  document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
+  document.querySelectorAll(".card[data-brief]").forEach(c=>{
+    c.setAttribute("aria-expanded","false");
+    c.addEventListener("click",e=>{ if(e.target.closest("a")) return; toggleCard(c); });
+    c.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleCard(c); } });
+  });
+}
+
+function toggleCard(c){
+  const open=!c.classList.contains("open");
+  c.classList.toggle("open",open); c.setAttribute("aria-expanded",String(open));
+  c.querySelector(".more .lbl").textContent= open ? "Recolher" : "Ler resumo detalhado";
+  if(open) setTimeout(()=>{ const r=c.getBoundingClientRect(); if(r.top<60||r.top>window.innerHeight*0.5) window.scrollTo({top:window.scrollY+r.top-64,behavior:"smooth"}); },60);
+}
+function findItem(title){
+  for(const a of AREAS){ for(const it of [...(a.articles||[]),...(a.market||[])]){ if(it.t===title) return {it,a}; } }
+  return null;
+}
+function openBrief(title){
+  const f=findItem(title); if(!f) return;
+  const {it,a}=f; const b=BRIEFS[title]||{};
+  const tags=(it.tags||[]).map(t=>`<span class="chip ${chipClass(t)}">${esc(t)}</span>`).join(" ");
+  const blk=(h,v)=> (v && v!=="—") ? `<div class="blk"><h6>${h}</h6><p>${v}</p></div>` : "";
+  const res=(b.r||[]).filter(x=>x&&x!=="—");
+  const src=(it.src||[]).map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ");
+  const sh=$("#sheet"); sh.style.setProperty("--ac",a.color);
+  sh.innerHTML=`<div class="grab"></div>
+    <div class="top"><h3>${esc(it.t)}</h3><button class="x" id="closeSheet" aria-label="Fechar">✕</button></div>
+    <div class="sdate">${CAL}${fmt(it.d)}</div><div class="meta" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="chip area" style="color:${a.color}">${esc(a.name)}</span>${tags}</div>
+    <div class="blk"><h6>Resumo</h6><p>${it.s}</p></div>
+    ${blk("O que é",b.o)}${blk("Como foi feito",b.m)}
+    ${res.length?`<div class="blk"><h6>Resultados</h6><ul>${res.map(x=>`<li>${x}</li>`).join("")}</ul></div>`:""}
+    ${blk("Por que importa",b.i)}${blk("Limitações e próximos passos",b.l)}
+    ${it.p?`<div class="pearl"><b>Pérola:</b> ${it.p}</div>`:""}
+    ${src?`<div class="src">Fonte: ${src}</div>`:""}`;
+  $("#sheetBg").classList.add("open"); $("#sheetBg").setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden"; sh.scrollTop=0;
+  $("#closeSheet").addEventListener("click",closeBrief);
+}
+function closeBrief(){ $("#sheetBg").classList.remove("open"); $("#sheetBg").setAttribute("aria-hidden","true"); document.body.style.overflow=""; }
+
+function go(id){
+  state.tab=id; state.q=""; state.tag=null;
+  if(location.hash!=="#"+id) history.replaceState(null,"","#"+id);
+  render(); window.scrollTo({top:0,behavior:"smooth"});
+  const t=document.querySelector(`.tab[data-id="${id}"]`); if(t) t.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+
+function init(){
+
+  $("#edition").textContent=EDITION.label;
+  $("#tabs").innerHTML=AREAS.map(a=>`<button class="tab" role="tab" data-id="${a.id}"><span class="dot" style="background:${a.id==="noticias"?"#fff":a.color}"></span>${esc(a.name)}</button>`).join("");
+  document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>go(b.dataset.id)));
+  $("#foot").innerHTML=`${esc(EDITION.label)} · ${esc(EDITION.period)}. Resumos em português feitos a partir das fontes linkadas; confira o original antes de aplicar na prática. Itens marcados como «pérola» são revisão de conceitos clássicos, não parte da notícia.`;
+  const h=(location.hash||"").slice(1);
+  state.tab=AREAS.some(a=>a.id===h)?h:"noticias";
+  render();
+  if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost")){
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  }
+  checkPush().then(()=>{ if(state.tab==="aovivo") render(); });
+  loadLive();
+  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") loadLive(); });
+  window.addEventListener("hashchange",()=>{ const k=location.hash.slice(1); if(AREAS.some(a=>a.id===k)&&k!==state.tab){ state.tab=k; render(); } });
+}
+init();
+</script>
+</body>
+</html>

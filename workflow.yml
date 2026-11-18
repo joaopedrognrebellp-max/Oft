@@ -1,0 +1,66 @@
+name: Buscar notícias e publicar app
+
+on:
+  schedule:
+    # A cada 2 horas, das 7h às 21h (horário de Brasília = UTC-3)
+    - cron: "0 10,12,14,16,18,20,22,0 * * *"
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      teste:
+        description: "Mandar uma notificação de teste agora?"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: noticias
+  cancel-in-progress: false
+
+jobs:
+  rodar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependência de notificação
+        run: npm install --no-audit --no-fund
+
+      - name: Buscar notícias e notificar
+        env:
+          VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_SUBSCRIPTION: ${{ secrets.PUSH_SUBSCRIPTION }}
+          TESTE: ${{ github.event.inputs.teste }}
+        run: node buscar-noticias.mjs
+
+      - name: Salvar feed.json no repositório
+        run: |
+          git config user.name "oftalmo-bot"
+          git config user.email "oftalmo-bot@users.noreply.github.com"
+          git add feed.json
+          git diff --cached --quiet || git commit -m "Notícias atualizadas" && git push
+
+      - name: Preparar site
+        run: |
+          mkdir -p _site
+          cp index.html manifest.json sw.js feed.json *.png _site/
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
